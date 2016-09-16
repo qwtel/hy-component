@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2016 Florian Klampfer
+ * Licensed under MIT
+ */
+import 'core-js/fn/object/assign';
+import 'core-js/fn/object/define-property';
+
 class Mix {}
 
 export default (C = Mix) => class extends C {
@@ -20,7 +27,7 @@ export default (C = Mix) => class extends C {
   setupProperties() {
     const hooks = this.hooks();
 
-    for (const key of Object.keys(this.state)) {
+    Object.keys(this.state).forEach(key => {
       if (typeof this[key] === 'undefined') {
         Object.defineProperty(this, key, {
           get: () => this.state[key],
@@ -33,7 +40,7 @@ export default (C = Mix) => class extends C {
           },
         });
       }
-    }
+    });
   }
 
   // TODO: renmae!?
@@ -69,8 +76,8 @@ export default (C = Mix) => class extends C {
   }
 
   setStateMap(map) {
-    for (const key of Object.keys(map)) {
+    Object.keys(map).forEach(key => {
       this.setStateKV(key, map[key]);
-    }
+    });
   }
 };

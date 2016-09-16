@@ -1,5 +1,8 @@
+/*
+ * Copyright (c) 2016 Florian Klampfer
+ * Licensed under MIT
+ */
 /* eslint-disable func-names, no-param-reassign */
-
 export default ($, name, Component) => {
   function plugin(option, ...args) {
     return this.each(function () { // Not using => on purpose!

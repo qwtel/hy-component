@@ -16,5 +16,10 @@
     "eslint-plugin-import": "^1.14.0",
     "eslint-plugin-jsx-a11y": "^2.2.1",
     "eslint-plugin-react": "^6.2.0"
+  },
+  "dependencies": {
+    "camel-case": "^3.0.0",
+    "core-js": "^2.4.1",
+    "param-case": "^2.1.0"
   }
 }

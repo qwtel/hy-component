@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2016 Florian Klampfer
+ * Licensed under MIT
+ */
+import 'core-js/fn/object/keys';
+
 import camelCase from 'camel-case';
 import paramCase from 'param-case';
 
@@ -42,7 +48,7 @@ export default (C = HTMLElement) => class extends C {
 
     const state = {};
 
-    for (const key of Object.keys(defaults)) {
+    Object.keys(defaults).forEach(key => {
       const attrName = paramCase(key);
       const attrVal = this.getAttribute(attrName);
       const typedValue = simpleType(defaults[key], attrVal);
@@ -50,7 +56,7 @@ export default (C = HTMLElement) => class extends C {
       if (typedValue != null) {
         state[key] = typedValue;
       }
-    }
+    });
 
     return state;
   }
@@ -58,7 +64,7 @@ export default (C = HTMLElement) => class extends C {
   reflectAttributeChanges() {
     const defaults = this.defaults();
 
-    for (const key of Object.keys(defaults)) {
+    Object.keys(defaults).forEach(key => {
       const eventName = `${key.toLowerCase()}change`;
 
       this.addEventListener(eventName, ({ detail }) => {
@@ -66,7 +72,7 @@ export default (C = HTMLElement) => class extends C {
       });
 
       setAttribute.call(this, key, this[key]);
-    }
+    });
   }
 
   attributeChangedCallback(attr, oldVal, val) {
