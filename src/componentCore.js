@@ -2,8 +2,8 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
-import 'core-js/fn/object/assign';
-import 'core-js/fn/object/define-property';
+// import 'core-js/fn/object/assign';
+// import 'core-js/fn/object/define-property';
 
 class Mix {}
 
