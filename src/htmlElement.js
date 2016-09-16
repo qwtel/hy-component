@@ -2,8 +2,6 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
-// import 'core-js/fn/object/keys';
-
 import camelCase from 'camel-case';
 import paramCase from 'param-case';
 
