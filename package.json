@@ -1,7 +1,7 @@
 {
-  "name": "vanilla-component",
-  "version": "0.1.0",
-  "description": "Tools for building vanilla web components that work across popular UI frameworks.",
+  "name": "y-component",
+  "version": "0.2.0",
+  "description": "Tools for building web components that work across popular UI frameworks.",
   "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Warning: no test specified\" && exit 0",
