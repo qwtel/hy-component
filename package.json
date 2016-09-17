@@ -43,7 +43,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/qwtel/vanilla-component.git"
+    "url": "git+https://github.com/qwtel/y-component.git"
   },
   "keywords": [
     "webcomponents",
@@ -51,10 +51,11 @@
     "components",
     "vanilla",
     "component",
-    "jquery"
+    "jquery",
+    "y"
   ],
   "bugs": {
-    "url": "https://github.com/qwtel/vanilla-component/issues"
+    "url": "https://github.com/qwtel/y-component/issues"
   },
-  "homepage": "https://github.com/qwtel/vanilla-component#readme"
+  "homepage": "https://github.com/qwtel/y-component#readme"
 }
