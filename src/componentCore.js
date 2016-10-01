@@ -22,15 +22,16 @@ export default (C = Mix) => class extends C {
   }
 
   setupProperties() {
-    const hooks = this.hooks();
+    const sideEffects = this.sideEffects();
 
     Object.keys(this.state).forEach(key => {
       if (typeof this[key] === 'undefined') {
         Object.defineProperty(this, key, {
           get: () => this.state[key],
           set: (value) => {
-            if (hooks[key] != null) {
-              hooks[key](value);
+            const sideEffect = sideEffects[key];
+            if (sideEffect != null) {
+              sideEffect(value);
             } else {
               this.setState(key, value);
             }
@@ -47,7 +48,7 @@ export default (C = Mix) => class extends C {
   }
 
   // TODO: renmae!?
-  hooks() {
+  sideEffects() {
     return {};
   }
 
