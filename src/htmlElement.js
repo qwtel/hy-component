@@ -36,7 +36,7 @@ function setAttribute(key, value) {
 }
 
 
-export default (C) => class extends C {
+export default C => class extends C {
   createdConnected() {
     this.initComponent(this, this.getStateFromAttributes());
     this.reflectAttributeChanges();
@@ -47,7 +47,7 @@ export default (C) => class extends C {
 
     const state = {};
 
-    Object.keys(defaults).forEach(key => {
+    Object.keys(defaults).forEach((key) => {
       const attrName = paramCase(key);
       const attrVal = this.getAttribute(attrName);
       const typedValue = simpleType(defaults[key], attrVal);
@@ -63,7 +63,7 @@ export default (C) => class extends C {
   reflectAttributeChanges() {
     const defaults = this.defaults();
 
-    Object.keys(defaults).forEach(key => {
+    Object.keys(defaults).forEach((key) => {
       setAttribute.call(this, key, this[key]);
     });
   }

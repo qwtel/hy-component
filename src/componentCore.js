@@ -12,11 +12,6 @@ export default (C = Mix) => class extends C {
     this.setupProperties();
   }
 
-  // TODO: use requestIdleCallback to init the component
-  // initComponentIdle() {
-  //
-  // }
-
   setupDOM(el) {
     console.warn('setupDOM not implemented'); // eslint-disable-line no-console
     return el;
@@ -25,7 +20,7 @@ export default (C = Mix) => class extends C {
   setupProperties() {
     const sideEffects = this.sideEffects();
 
-    Object.keys(this.state).forEach(key => {
+    Object.keys(this.state).forEach((key) => {
       if (typeof this[key] === 'undefined') {
         Object.defineProperty(this, key, {
           get: () => this.state[key],
@@ -64,18 +59,11 @@ export default (C = Mix) => class extends C {
   }
 
   setStateKV(key, value) {
-    // const oldVal = this.state[key];
     this.state[key] = value;
-
-    // if (value !== oldVal) {
-    //   this.dispatchEvent(new CustomEvent(`${key.toLowerCase()}change`, {
-    //     detail: value,
-    //   }));
-    // }
   }
 
   setStateMap(map) {
-    Object.keys(map).forEach(key => {
+    Object.keys(map).forEach((key) => {
       this.setStateKV(key, map[key]);
     });
   }

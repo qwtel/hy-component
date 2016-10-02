@@ -4,7 +4,9 @@
       "browser": true
   },
   "globals": {
-    "$": true,
-    "customElements": true
+    "$": true
+  },
+  "rules": {
+    "class-methods-use-this": "off"
   }
 }
