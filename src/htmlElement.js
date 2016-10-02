@@ -47,7 +47,7 @@ export default C => class extends C {
 
     const state = {};
 
-    Object.keys(defaults).forEach((key) => {
+    for (const key of Object.keys(defaults)) {
       const attrName = paramCase(key);
       const attrVal = this.getAttribute(attrName);
       const typedValue = simpleType(defaults[key], attrVal);
@@ -55,7 +55,7 @@ export default C => class extends C {
       if (typedValue != null) {
         state[key] = typedValue;
       }
-    });
+    }
 
     return state;
   }
@@ -63,9 +63,9 @@ export default C => class extends C {
   reflectAttributeChanges() {
     const defaults = this.defaults();
 
-    Object.keys(defaults).forEach((key) => {
+    for (const key of Object.keys(defaults)) {
       setAttribute.call(this, key, this[key]);
-    });
+    }
   }
 
   attributeChangedCallback(attr, oldVal, val) {

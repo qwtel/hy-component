@@ -2,6 +2,9 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
+// import 'core-js/fn/object/assign';
+// import 'core-js/fn/object/define-property';
+// import 'core-js/fn/object/keys';
 
 class Mix {}
 
@@ -20,7 +23,7 @@ export default (C = Mix) => class extends C {
   setupProperties() {
     const sideEffects = this.sideEffects();
 
-    Object.keys(this.state).forEach((key) => {
+    for (const key of Object.keys(this.state)) {
       if (typeof this[key] === 'undefined') {
         Object.defineProperty(this, key, {
           get: () => this.state[key],
@@ -34,7 +37,7 @@ export default (C = Mix) => class extends C {
           },
         });
       }
-    });
+    }
   }
 
   // TODO: renmae!?
@@ -43,7 +46,6 @@ export default (C = Mix) => class extends C {
     return {};
   }
 
-  // TODO: renmae!?
   sideEffects() {
     return {};
   }
@@ -63,8 +65,8 @@ export default (C = Mix) => class extends C {
   }
 
   setStateMap(map) {
-    Object.keys(map).forEach((key) => {
+    for (const key of Object.keys(map)) {
       this.setStateKV(key, map[key]);
-    });
+    }
   }
 };
