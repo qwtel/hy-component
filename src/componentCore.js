@@ -2,6 +2,7 @@
  * Copyright (c) 2016 Florian Klampfer
  * Licensed under MIT
  */
+
 class Mix {}
 
 export default (C = Mix) => class extends C {
@@ -63,14 +64,14 @@ export default (C = Mix) => class extends C {
   }
 
   setStateKV(key, value) {
-    const oldVal = this.state[key];
+    // const oldVal = this.state[key];
     this.state[key] = value;
 
-    if (value !== oldVal) {
-      this.el.dispatchEvent(new CustomEvent(`${key.toLowerCase()}change`, {
-        detail: value,
-      }));
-    }
+    // if (value !== oldVal) {
+    //   this.dispatchEvent(new CustomEvent(`${key.toLowerCase()}change`, {
+    //     detail: value,
+    //   }));
+    // }
   }
 
   setStateMap(map) {

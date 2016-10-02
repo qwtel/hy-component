@@ -35,7 +35,8 @@ function setAttribute(key, value) {
   }
 }
 
-export default (C = HTMLElement) => class extends C {
+
+export default (C) => class extends C {
   createdConnected() {
     this.initComponent(this, this.getStateFromAttributes());
     this.reflectAttributeChanges();
@@ -63,12 +64,6 @@ export default (C = HTMLElement) => class extends C {
     const defaults = this.defaults();
 
     Object.keys(defaults).forEach(key => {
-      const eventName = `${key.toLowerCase()}change`;
-
-      this.addEventListener(eventName, ({ detail }) => {
-        setAttribute.call(this, key, detail);
-      });
-
       setAttribute.call(this, key, this[key]);
     });
   }
@@ -80,6 +75,15 @@ export default (C = HTMLElement) => class extends C {
 
     if (typedValue != null) {
       this[key] = typedValue;
+    }
+  }
+
+  // @override
+  setStateKV(key, value) {
+    const oldVal = this.state[key];
+    super.setStateKV(key, value);
+    if (value !== oldVal) {
+      setAttribute.call(this, key, value);
     }
   }
 };
