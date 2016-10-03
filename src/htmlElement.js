@@ -35,11 +35,15 @@ function setAttribute(key, value) {
   }
 }
 
+const setImmediate = window.setImmediate || (f => setTimeout(f, 0));
 
 export default C => class extends C {
+  // TODO: rename
   createdConnected() {
-    this.initComponent(this, this.getStateFromAttributes());
-    this.reflectAttributeChanges();
+    setImmediate(() => {
+      this.initComponent(this, this.getStateFromAttributes());
+      this.reflectAttributeChanges();
+    });
   }
 
   getStateFromAttributes() {
