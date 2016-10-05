@@ -3,7 +3,12 @@
  * Licensed under MIT
  */
 /* eslint-disable func-names, no-param-reassign */
-export default ($, name, Component) => {
+import _$ from 'jquery';
+
+// TODO: better solution?
+const $ = global.$ || _$;
+
+export default (name, Component) => {
   function plugin(option, ...args) {
     return this.each(function () { // Not using => on purpose!
       const $this = $(this);

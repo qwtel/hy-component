@@ -11,8 +11,8 @@ class Mix {}
 export default (C = Mix) => class extends C {
   initComponent(el, state) {
     this.state = Object.assign({}, this.defaults(), state);
-    this.el = this.setupDOM(el);
     this.setupProperties();
+    this.el = this.setupDOM(el);
   }
 
   setupDOM(el) {
@@ -25,23 +25,32 @@ export default (C = Mix) => class extends C {
 
     for (const key of Object.keys(this.state)) {
       if (typeof this[key] === 'undefined') {
-        Object.defineProperty(this, key, {
-          get: () => this.state[key],
-          set: (value) => {
-            const sideEffect = sideEffects[key];
-            if (sideEffect != null) {
-              sideEffect(value);
-            } else {
-              this.setState(key, value);
-            }
-          },
-        });
+        const sideEffect = sideEffects[key];
+        this.setupProperty(key, sideEffect);
       }
     }
   }
 
-  // TODO: renmae!?
+  setupProperty(key, sideEffect) {
+    Object.defineProperty(this, key, {
+      get: () => this.state[key],
+      set: (value) => {
+        if (sideEffect != null) {
+          sideEffect(value);
+        } else {
+          this.setState(key, value);
+        }
+      },
+    });
+  }
+
+  // TODO: rename
+  getEl() {
+    return this.el;
+  }
+
   defaults() {
+    // TODO: production builds with preprocess
     console.warn('defaults not provided'); // eslint-disable-line no-console
     return {};
   }

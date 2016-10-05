@@ -28,7 +28,7 @@ function setAttribute(key, value) {
 
   if (value === true) {
     this.setAttribute(attrName, '');
-  } else if (value === false) {
+  } else if (value === false || value === null) {
     this.removeAttribute(attrName);
   } else {
     this.setAttribute(attrName, value);
@@ -44,6 +44,10 @@ export default C => class extends C {
       this.initComponent(this, this.getStateFromAttributes());
       this.reflectAttributeChanges();
     });
+  }
+
+  getEl() {
+    return this;
   }
 
   getStateFromAttributes() {
