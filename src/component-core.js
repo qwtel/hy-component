@@ -3,11 +3,18 @@
  * Licensed under MIT
  */
 
-// import 'core-js/fn/array/for-each';
+// const JS_FEATURES = [
+//   'fn/array/for-each',
+//   'fn/function/bind',
+//   'fn/number/constructor',
+//   'fn/object/assign',
+//   'fn/object/define-property',
+//   'fn/object/keys',
+// ];
 
-// import 'core-js/fn/object/assign';
-// import 'core-js/fn/object/define-property';
-// import 'core-js/fn/object/keys';
+// const MODERNIZR_TESTS = [
+//   'customevent',
+// ];
 
 class Mix {}
 
@@ -42,7 +49,6 @@ function setupProperty(key, sideEffect) {
   });
 }
 
-// TODO: do we even need getters/setters?
 // TODO: study how native elements deal with attributes/properites
 function setupProperties() {
   const sideEffects = this.sideEffects();
