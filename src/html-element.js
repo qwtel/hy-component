@@ -78,11 +78,10 @@ export default C => class extends C {
   }
 
   getTemplateInstance(version) {
-    const name = this.componentName();
     return document
-      .querySelector(`link[href$="${name}.html"]`)
+      .querySelector(`link[href$="${this.componentName}.html"]`)
       .import
-      .getElementById(`${name}-template-${version}`)
+      .getElementById(`${this.componentName}-template-${version}`)
       .content
       .cloneNode(true);
   }

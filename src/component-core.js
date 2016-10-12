@@ -62,7 +62,11 @@ function setupProperties() {
 }
 
 export default (C = Mix) => class extends C {
-  componentName() {
+  get componentName() {
+    return this.getComponentName();
+  }
+
+  getComponentName() {
     throw Error('Component needs to have a name, e.g. `my-tag`. Override `getComponentName`');
   }
 
@@ -94,18 +98,19 @@ export default (C = Mix) => class extends C {
   }
 
   fireEvent(eventName, data) {
-    const name = this.componentName();
-    const eventNameNS = `${name}-${eventName}`;
+    const eventNameNS = `${this.componentName}-${eventName}`;
     this.el.dispatchEvent(createEvent(eventNameNS, data));
   }
 
   defaults() {
-    // TODO: production builds with preprocess
+    // TODO: production builds with preprocess?
     console.warn('defaults not provided'); // eslint-disable-line no-console
     return {};
   }
 
   sideEffects() {
+    // TODO: production builds with preprocess?
+    console.warn('sideEffects not provided'); // eslint-disable-line no-console
     return {};
   }
 
