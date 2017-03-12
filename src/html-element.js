@@ -14,7 +14,7 @@ function getStateFromAttributes() {
 
   const state = {};
 
-  for (const key of Object.keys(defaults)) {
+  Object.keys(defaults).forEach((key) => {
     const attrName = paramCase(key);
     const attrVal = this.getAttribute(attrName);
     const typedValue = simpleType(defaults[key], attrVal);
@@ -22,17 +22,14 @@ function getStateFromAttributes() {
     if (typedValue != null) {
       state[key] = typedValue;
     }
-  }
+  });
 
   return state;
 }
 
 function reflectAttributeChanges() {
-  const defaults = this.defaults();
-
-  for (const key of Object.keys(defaults)) {
-    setAttribute.call(this, key, this[key]);
-  }
+  const defaults = this.constructor.DEFAULTS;
+  Object.keys(defaults).forEach(key => setAttribute.call(this, key, this[key]));
 }
 
 export default C => class extends C {
