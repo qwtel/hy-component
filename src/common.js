@@ -1,7 +1,6 @@
-/*
- * Copyright (c) 2016 Florian Klampfer
- * Licensed under MIT
- */
+// Copyright (c) 2017 Florian Klampfer
+// Licensed under MIT
+
 import paramCase from 'param-case';
 
 // infers primitive types form `defVal` and applies it to `val`
