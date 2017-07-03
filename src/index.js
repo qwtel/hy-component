@@ -13,10 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import componentCore from './component-core';
-import htmlElement from './html-element';
+import componentMixin from './component-mixin';
+import customElementMixin, { CustomElement } from './custom-element-mixin';
 
-export {
-  componentCore,
-  htmlElement,
-};
+export { componentMixin, customElementMixin, CustomElement };

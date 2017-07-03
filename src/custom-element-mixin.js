@@ -39,7 +39,7 @@ function getStateFromAttributes() {
 }
 
 function reflectAttributeChanges() {
-  const defaults = this.constructor.DEFAULTS;
+  const defaults = this.defaults();
   Object.keys(defaults).forEach(key => setAttribute.call(this, key, this[key]));
 }
 
@@ -115,3 +115,10 @@ export default C => class extends C {
     return this;
   }
 };
+
+export function CustomElement() {
+  return Reflect.construct(typeof HTMLElement === 'function' ? HTMLElement : () => {}, [], this.__proto__.constructor); // eslint-disable-line
+}
+
+Object.setPrototypeOf(CustomElement.prototype, HTMLElement.prototype);
+Object.setPrototypeOf(CustomElement, HTMLElement);

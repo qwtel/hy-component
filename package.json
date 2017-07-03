@@ -1,6 +1,6 @@
 {
   "name": "y-component",
-  "version": "6.1.0",
+  "version": "7.0.0",
   "description": "Tools for building web components that work across popular UI frameworks.",
   "main": "src/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "watch": "npm run mkdirs && babel -w src -d es5",
     "lint": "eslint src",
     "dev": "npm run watch",
-    "prepublish": "npm run lint && npm run test && npm run clean && npm run build"
+    "prepare": "npm run lint && npm run test && npm run clean && npm run build"
   },
   "author": "Florian Klampfer <f.klampfer@gmail.com> (http://qwtel.com)",
   "license": "GPL-3.0",

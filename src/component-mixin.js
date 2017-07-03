@@ -13,6 +13,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+/* eslint-disable no-console */
+
 // const JS_FEATURES = [
 //   'fn/array/for-each',
 //   'fn/function/bind',
@@ -25,8 +27,6 @@
 // const MODERNIZR_TESTS = [
 //   'customevent',
 // ];
-
-class Mix {}
 
 const Symbol = global.Symbol || (x => `_${x}`);
 
@@ -50,11 +50,8 @@ function setupProperty(key, sideEffect) {
     enumerable: true,
     get: () => this[STATE][key],
     set: (value) => {
-      if (sideEffect != null) {
-        sideEffect(value);
-      } else {
-        this.setState(key, value);
-      }
+      this.setState(key, value);
+      if (sideEffect) sideEffect(value);
     },
   });
 }
@@ -71,7 +68,9 @@ function setupProperties() {
   });
 }
 
-export default (C = Mix) => class extends C {
+class Component {}
+
+export default (C = Component) => class extends C {
   get componentName() {
     return this.getComponentName();
   }
@@ -114,13 +113,13 @@ export default (C = Mix) => class extends C {
 
   defaults() {
     // TODO: production builds with preprocess?
-    console.warn('defaults not provided'); // eslint-disable-line no-console
+    console.warn('defaults not provided');
     return {};
   }
 
   sideEffects() {
     // TODO: production builds with preprocess?
-    console.warn('sideEffects not provided'); // eslint-disable-line no-console
+    console.warn('sideEffects not provided');
     return {};
   }
 
