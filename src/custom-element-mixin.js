@@ -13,8 +13,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import camelCase from 'camel-case';
-import paramCase from 'param-case';
+import camelCase from 'camelcase';
+import decamelize from 'decamelize';
 
 import { simpleType, setAttribute } from './common';
 
@@ -26,7 +26,7 @@ function getStateFromAttributes() {
   const state = {};
 
   Object.keys(defaults).forEach((key) => {
-    const attrName = paramCase(key);
+    const attrName = decamelize(key, '-');
     const attrVal = this.getAttribute(attrName);
     const typedValue = simpleType(defaults[key], attrVal);
 
@@ -87,9 +87,9 @@ export default C => class extends C {
 
   getTemplateInstance(version) {
     return document
-      .querySelector(`link[href$="${this.componentName}.html"]`)
+      .querySelector(`link[href$="${this.componentName}.html"]`) // TODO: VERY BAD
       .import
-      .getElementById(`${this.componentName}-template-${version}`)
+      .querySelector(`#${this.componentName}-template-${version}`)
       .content
       .cloneNode(true);
   }

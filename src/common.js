@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import paramCase from 'param-case';
+import decamelize from 'decamelize';
 
 // infers primitive types form `defVal` and applies it to `val`
 export function simpleType(defVal, val) {
@@ -39,7 +39,7 @@ export function simpleType(defVal, val) {
 }
 
 export function setAttribute(key, value) {
-  const attrName = paramCase(key);
+  const attrName = decamelize(key, '-');
 
   if (value === true) {
     this.setAttribute(attrName, '');
