@@ -1,5 +1,7 @@
-// Copyright (c) 2017 Florian Klampfer
+// Copyright (c) 2017 Florian Klampfer <https://qwtel.com/>
 // Licensed under MIT
+
+import 'core-js/fn/number/constructor';
 
 import decamelize from 'decamelize';
 
