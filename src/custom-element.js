@@ -122,3 +122,7 @@ export function CustomElement() {
 
 Object.setPrototypeOf(CustomElement.prototype, HTMLElement.prototype);
 Object.setPrototypeOf(CustomElement, HTMLElement);
+
+export function fragmentFromString(strHTML) {
+  return document.createRange().createContextualFragment(strHTML);
+}
