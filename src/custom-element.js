@@ -12,12 +12,17 @@ import camelCase from 'camelcase';
 import decamelize from 'decamelize';
 
 import { simpleType, setAttribute } from './common';
-import { MODERNIZR_TESTS as COMPONENT_MODERNIZER_TESTS } from './component';
+import { setup, setupDOM, setState, getEl, MODERNIZR_TESTS as COMPONENT_MODERNIZR_TESTS }
+from './component';
 
-export const MODERNIZR_TESTS = Object.assign({
-  template: true,
-  customelements: true,
-}, COMPONENT_MODERNIZER_TESTS);
+const Symbol = global.Symbol || (x => `_${x}`);
+export const getTemplate = Symbol('getTemplate');
+
+export const MODERNIZR_TESTS = [
+  ...COMPONENT_MODERNIZR_TESTS,
+  'template',
+  'customelements',
+];
 
 function getStateFromAttributes() {
   const { defaults } = this.constructor;
@@ -50,15 +55,7 @@ export function customElementMixin(C) {
 
     // @override
     connectedCallback() {
-      this.setupComponent();
-      this.fireEvent('attached');
-    }
-
-    // @override
-    setupComponent() {
-      super.setupComponent(this, getStateFromAttributes.call(this));
-      reflectAttributeChanges.call(this);
-      return this;
+      this[setup]();
     }
 
     // @override
@@ -73,23 +70,39 @@ export function customElementMixin(C) {
     }
 
     // @override
-    setInternalStateKV(key, value) {
-      super.setInternalStateKV(key, value);
+    [setup]() {
+      super[setup](this, getStateFromAttributes.call(this));
+      reflectAttributeChanges.call(this);
+      return this;
+    }
+
+    // @override
+    [setState](key, value) {
+      super[setState](key, value);
       setAttribute.call(this, key, value);
     }
 
     // @override
-    setupDOM(el) {
+    [setupDOM](el) {
       if ('attachShadow' in document.body) {
         el.attachShadow({ mode: 'open' });
-        const instance = this.getTemplateInstance();
+        const instance = this[getTemplate]();
         el.shadowRoot.appendChild(instance);
         return el.shadowRoot;
       }
       throw Error('ShadowDOM API not supported');
     }
 
-    getTemplateInstance() {
+    // @override
+    [getEl]() {
+      return this;
+    }
+
+    // get template() {
+    //   return this[getTemplate]();
+    // }
+
+    [getTemplate]() {
       const { componentName } = this.constructor;
 
       return document
@@ -98,11 +111,6 @@ export function customElementMixin(C) {
         .querySelector(`#${componentName}-template`)
         .content
         .cloneNode(true);
-    }
-
-    // @override
-    getEl() {
-      return this;
     }
   };
 }

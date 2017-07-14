@@ -6,34 +6,43 @@ import 'core-js/fn/object/assign';
 import 'core-js/fn/object/define-property';
 import 'core-js/fn/object/keys';
 
-export const MODERNIZR_TESTS = {
-  customevent: true,
-};
+export const MODERNIZR_TESTS = [
+  'customevent',
+];
 
 const Symbol = global.Symbol || (x => `_${x}`);
 const ROOT = Symbol('root');
 const STATE = Symbol('state');
 
+export const setup = Symbol('setup');
+export const setupDOM = Symbol('setupDOM');
+export const getRoot = Symbol('getRoot');
+export const getEl = Symbol('getEl');
+export const fire = Symbol('fire');
+export const setState = Symbol('setState');
+
 function createEvent(eventName, data = {}) {
   try {
-    return new CustomEvent(eventName, data);
+    return new CustomEvent(eventName, { detail: data });
   } catch (e) {
     const event = document.createEvent('CustomEvent');
-    event.initCustomEvent(eventName, true, true, data.detail);
+    event.initCustomEvent(eventName, true, true, data);
     return event;
   }
 }
 
 function setupProperty(key, sideEffect) {
   Object.defineProperty(this, key, {
-    enumerable: true,
     get: () => this[STATE][key],
     set: (value) => {
       if (this[STATE][key] !== value) {
-        this.setInternalStateKV(key, value);
+        this[setState](key, value);
         if (sideEffect) sideEffect.call(this, value);
+        // this[fire](`${key}-change`);
       }
     },
+    enumerable: true,
+    configurable: true,
   });
 }
 
@@ -42,9 +51,9 @@ function setupProperties() {
   const { sideEffects } = this.constructor;
 
   Object.keys(this[STATE]).forEach((key) => {
-    if (process.env.DEBUG && typeof this[key] !== 'undefined') {
-      console.warn(`Property name ${key} conflicts with pre-existing key.`, this[key]);
-    }
+    // if (process.env.DEBUG && typeof this.prototype[key] !== 'undefined') {
+    //   console.warn(`Property name ${key} conflicts with pre-existing key.`, this[key]);
+    // }
     const sideEffect = sideEffects[key];
     setupProperty.call(this, key, sideEffect);
   });
@@ -54,7 +63,15 @@ class Component {}
 
 export function componentMixin(C = Component) {
   return class extends C {
-    setupComponent(el, state) {
+    get root() {
+      return this[getRoot]();
+    }
+
+    get el() {
+      return this[getEl]();
+    }
+
+    [setup](el, state) {
       const { defaults } = this.constructor;
 
       if (process.env.DEBUG) {
@@ -66,54 +83,46 @@ export function componentMixin(C = Component) {
 
       this[STATE] = Object.assign({}, defaults, state);
       setupProperties.call(this);
-      this[ROOT] = this.setupDOM(el);
+      this[ROOT] = this[setupDOM](el);
       return this;
     }
 
-    setupDOM(el) {
+    [setupDOM](el) {
       return el;
     }
 
-    getRoot() {
+    [getRoot]() {
       return this[ROOT];
     }
 
-    get root() {
-      return this.getRoot();
-    }
-
-    getEl() {
+    [getEl]() {
       return this[ROOT];
     }
 
-    get el() {
-      return this.getEl();
-    }
-
-    fireEvent(eventName, data) {
+    [fire](eventName, data) {
       const { componentName } = this.constructor;
       const eventNameNS = `${componentName}-${eventName}`;
       this.el.dispatchEvent(createEvent(eventNameNS, data));
     }
 
-    setInternalState(keyOrMap, value) {
-      if (typeof keyOrMap === 'string') {
-        this.setInternalStateKV(keyOrMap, value);
-      } else if (typeof keyOrMap === 'object') {
-        this.setInternalStateMap(keyOrMap);
-      } else if (process.env.DEBUG) {
-        console.warn('`setInternalState` called without argument');
-      }
-    }
-
-    setInternalStateKV(key, value) {
+    [setState](key, value) {
       this[STATE][key] = value;
     }
 
-    setInternalStateMap(map) {
-      Object.keys(this[STATE]).forEach((key) => {
-        this.setInternalStateKV(key, map[key]);
-      });
-    }
+    // setInternalStateMap(map) {
+    //   Object.keys(this[STATE]).forEach((key) => {
+    //     this.setInternalStateKV(key, map[key]);
+    //   });
+    // }
+
+    // setInternalState(keyOrMap, value) {
+    //   if (typeof keyOrMap === 'string') {
+    //     this.setInternalStateKV(keyOrMap, value);
+    //   } else if (typeof keyOrMap === 'object') {
+    //     this.setInternalStateMap(keyOrMap);
+    //   } else if (process.env.DEBUG) {
+    //     console.warn('`setInternalState` called without argument');
+    //   }
+    // }
   };
 }

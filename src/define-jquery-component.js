@@ -3,9 +3,11 @@
 
 import $ from 'jquery';
 
-export const MODERNIZR_TESTS = {};
+import { VanillaComponent, setupDOM } from './vanilla';
 
-// TODO: rename
+export class JQueryComponent extends VanillaComponent {}
+export { setupDOM };
+
 export function defineJQueryComponent(name, Component) {
   function plugin(option, ...args) {
     return this.each(function () { // eslint-disable-line func-names
