@@ -5,6 +5,7 @@
   },
   "rules": {
     "class-methods-use-this": "off",
+    "brace-style": "off",
     "no-console": "off",
     "import/no-extraneous-dependencies": "off",
     "import/no-unresolved": "off",

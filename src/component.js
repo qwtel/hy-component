@@ -35,11 +35,10 @@ function setupProperty(key, sideEffect) {
   Object.defineProperty(this, key, {
     get: () => this[STATE][key],
     set: (value) => {
-      if (this[STATE][key] !== value) {
-        this[setState](key, value);
-        if (sideEffect) sideEffect.call(this, value);
-        // this[fire](`${key}-change`);
-      }
+      const oldValue = this[STATE][key];
+      this[setState](key, value);
+      if (sideEffect) sideEffect.call(this, value, oldValue);
+      // this[fire](`${key}-change`);
     },
     enumerable: true,
     configurable: true,
