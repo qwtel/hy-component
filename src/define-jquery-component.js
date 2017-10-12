@@ -4,10 +4,10 @@
 
 import $ from 'jquery';
 
-import { VanillaComponent, setupDOM } from './vanilla';
+import { VanillaComponent, sSetupDOM } from './vanilla';
 
 export class JQueryComponent extends VanillaComponent {}
-export { setupDOM };
+export { sSetupDOM };
 
 export function defineJQueryComponent(name, Component) {
   function plugin(option, ...args) {

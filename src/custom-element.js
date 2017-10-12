@@ -13,14 +13,13 @@ import 'core-js/fn/string/trim'; // used by camelcase
 import camelCase from 'camelcase';
 import decamelize from 'decamelize';
 
-import { setup, setupDOM, setState, getEl, MODERNIZR_TESTS as COMPONENT_MODERNIZR_TESTS }
-from './component';
+import { sSetup, sSetupDOM, sSetState, sGetEl, COMPONENT_FEATURE_TESTS } from './component';
 
 const Symbol = global.Symbol || (x => `_${x}`);
-export const getTemplate = Symbol('getTemplate');
+export const sGetTemplate = Symbol('getTemplate');
 
-export const MODERNIZR_TESTS = [
-  ...COMPONENT_MODERNIZR_TESTS,
+export const CUSTOM_ELEMENT_FEATURE_TESTS = [
+  ...COMPONENT_FEATURE_TESTS,
   'template',
   'customelements',
 ];
@@ -34,7 +33,7 @@ function simpleType(defVal, attr) {
     if (attr != null) return Number(attr);
     return defVal;
   }
-  else if (defVal && typeof defVal === 'object' && defVal.length > 0) {
+  else if (defVal && typeof defVal === 'object' /* && typeof defVal.length !== 'undefined' */) {
     if (attr != null) return attr.split ? attr.split(',') : [];
     return defVal;
   }
@@ -45,12 +44,12 @@ function simpleType(defVal, attr) {
   return undefined;
 }
 
-let HACK;
+let circutBreaker;
 
 function setAttribute(key, val, silent = false) {
   const attrName = decamelize(key, '-');
 
-  if (silent) HACK = attrName;
+  if (silent) circutBreaker = attrName;
 
   if (val === true) {
     this.setAttribute(attrName, '');
@@ -103,12 +102,15 @@ export function customElementMixin(C) {
 
     /* @override */
     connectedCallback() {
-      this[setup]();
+      this[sSetup]();
     }
 
     /* @override */
     attributeChangedCallback(attrName, oldAttr, attr) {
-      if (HACK === attrName) { HACK = undefined; return; }
+      if (circutBreaker === attrName) {
+        circutBreaker = undefined;
+        return;
+      }
 
       if (oldAttr !== attr) {
         const { defaults } = this.constructor;
@@ -122,41 +124,39 @@ export function customElementMixin(C) {
     }
 
     /* @override */
-    [setup]() {
-      super[setup](this, getStateFromAttributes.call(this));
+    [sSetup]() {
+      super[sSetup](this, getStateFromAttributes.call(this));
       reflectAttributeChanges.call(this);
       return this;
     }
 
     /* @override */
-    [setState](key, value) {
-      super[setState](key, value);
+    [sSetState](key, value) {
+      super[sSetState](key, value);
       setAttribute.call(this, key, value, true);
     }
 
     /* @override */
-    [setupDOM](el) {
-      if ('attachShadow' in document.body) {
-        el.attachShadow({ mode: 'open' });
-        const instance = this[getTemplate]();
-        el.shadowRoot.appendChild(instance);
-        return el.shadowRoot;
+    [sSetupDOM](el) {
+      const instance = this[sGetTemplate]();
+      if (instance) {
+        if ('attachShadow' in Element.prototype) {
+          el.attachShadow({ mode: 'open' });
+          el.shadowRoot.appendChild(instance);
+          return el.shadowRoot;
+        }
+        if (process.env.DEBUG) console.warn('Component doesnt define a template. Intentional?');
+        throw Error('ShadowDOM API not supported');
       }
-      throw Error('ShadowDOM API not supported');
+      return el;
     }
 
     /* @override */
-    [getEl]() {
+    [sGetEl]() {
       return this;
     }
 
-    /*
-    get template() {
-      return this[getTemplate]();
-    }
-    */
-
-    [getTemplate]() {
+    [sGetTemplate]() {
       const { componentName } = this.constructor;
 
       return document
@@ -171,11 +171,14 @@ export function customElementMixin(C) {
 
 // This is a drop-in replacement for `HTMLElement` which is compatible with babel.
 export function CustomElement() {
-  return Reflect.construct(typeof HTMLElement === 'function' ? HTMLElement : () => {},
-    [], this.__proto__.constructor); // eslint-disable-line
+  const HTMLElement = typeof window.HTMLElement === 'function' ? window.HTMLElement : () => {};
+  return Reflect.construct(HTMLElement, [], this.__proto__.constructor); // eslint-disable-line
 }
-Object.setPrototypeOf(CustomElement.prototype, HTMLElement.prototype);
-Object.setPrototypeOf(CustomElement, HTMLElement);
+
+if (Object.setPrototypeOf) {
+  Object.setPrototypeOf(CustomElement.prototype, HTMLElement.prototype);
+  Object.setPrototypeOf(CustomElement, HTMLElement);
+}
 
 // TODO
 export function fragmentFromString(strHTML) {
