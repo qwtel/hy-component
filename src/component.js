@@ -87,8 +87,7 @@ export function componentMixin(C = Component) {
 
     [sFire](eventName, data) {
       const { componentName } = this.constructor;
-      const eventNameNS = `${componentName}-${eventName}`;
-      const event = new CustomEvent(eventNameNS, data);
+      const event = new CustomEvent(`${componentName}-${eventName}`, data);
       this.el.dispatchEvent(event);
     }
 
