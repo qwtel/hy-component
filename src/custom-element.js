@@ -28,16 +28,13 @@ export const CUSTOM_ELEMENT_FEATURE_TESTS = [
 function simpleType(defVal, attr) {
   if (typeof defVal === 'boolean') {
     return attr != null;
-  }
-  else if (typeof defVal === 'number') {
+  } else if (typeof defVal === 'number') {
     if (attr != null) return Number(attr);
     return defVal;
-  }
-  else if (defVal && typeof defVal === 'object' /* && typeof defVal.length !== 'undefined' */) {
+  } else if (defVal && typeof defVal === 'object' /* && typeof defVal.length !== 'undefined' */) {
     if (attr != null) return attr.split ? attr.split(',') : [];
     return defVal;
-  }
-  else if (typeof defVal === 'string') {
+  } else if (typeof defVal === 'string') {
     if (attr != null) return attr;
     return defVal;
   }
@@ -53,18 +50,14 @@ function setAttribute(key, val, silent = false) {
 
   if (val === true) {
     this.setAttribute(attrName, '');
-  }
-  else if ((val === false || val === null || val === undefined)
+  } else if ((val === false || val === null || val === undefined)
            || (typeof val === 'object' && val.length === 0)) {
     this.removeAttribute(attrName);
-  }
-  else if (val && typeof val === 'object' && val.length > 0 && val.join) {
+  } else if (val && typeof val === 'object' && val.length > 0 && val.join) {
     this.setAttribute(attrName, val.join(','));
-  }
-  else if (typeof val === 'string' || typeof val === 'number') {
+  } else if (typeof val === 'string' || typeof val === 'number') {
     this.setAttribute(attrName, val);
-  }
-  else if (process.env.DEBUG) {
+  } else if (process.env.DEBUG) {
     console.warn(`Unrecognized type for key '${key}' with value`, val);
   }
 }

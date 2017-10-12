@@ -1,12 +1,11 @@
 {
   "name": "hy-component",
-  "version": "1.0.0",
+  "version": "1.0.0-hydejack",
   "description": "Tools for building web components that work across popular UI frameworks.",
   "main": "./src/component.js",
   "scripts": {
     "test": "echo \"Warning: no test specified\" && exit 0",
     "lint": "eslint src",
-    "dev": "npm run watch",
     "prepare": "npm run lint && npm run test"
   },
   "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
@@ -16,16 +15,19 @@
     "babel-preset-es2016": "^6.24.1",
     "babelify": "^7.3.0",
     "envify": "^4.1.0",
-    "eslint": "3.19.0",
-    "eslint-config-airbnb": "14.1.0",
-    "eslint-plugin-import": "2.2.0",
-    "eslint-plugin-jsx-a11y": "4.0.0",
-    "eslint-plugin-react": "6.10.3"
+    "eslint": "4.8.0",
+    "eslint-config-airbnb": "16.0.0",
+    "eslint-plugin-import": "2.7.0",
+    "eslint-plugin-jsx-a11y": "6.0.2",
+    "eslint-plugin-react": "7.4.0"
   },
   "dependencies": {
     "camelcase": "^4.1.0",
-    "core-js": "^2.4.1",
+    "core-js": "^2.5.1",
     "decamelize": "^1.2.0"
+  },
+  "optionalDependencies": {
+    "jquery": "^3.2.1"
   },
   "browserify": {
     "transform": [
