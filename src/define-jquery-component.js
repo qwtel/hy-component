@@ -7,10 +7,14 @@
 // We modify eslint to allow passing anonymous `function`s:
 /* eslint-disable func-names, consistent-return */
 
+import 'core-js/fn/array/for-each';
+import 'core-js/fn/object/keys';
+
 // jQuery is an optional dependency
 import $ from 'jquery'; // eslint-disable-line import/no-extraneous-dependencies
 
-import { sSetup, sSetupDOM, sFire } from './component';
+import { simpleType } from './common';
+import { sSetup, sSetupDOM, sFire } from './symbols';
 import { VanillaComponent } from './vanilla';
 
 export { sSetup, sSetupDOM };
@@ -18,7 +22,7 @@ export { sSetup, sSetupDOM };
 export const JQueryComponent = VanillaComponent;
 
 export function defineJQueryComponent(name, Component) {
-  const cName = name.toLowerCase();
+  const ns = name.toLowerCase();
 
   const Constructor = class extends Component {
     [sSetupDOM](el) {
@@ -27,7 +31,7 @@ export function defineJQueryComponent(name, Component) {
     }
 
     [sFire](eventName, data) {
-      const event = $.Event(`${eventName}.${cName}`, data);
+      const event = $.Event(`${eventName}.${ns}`, data);
       this.$element.trigger(event);
     }
   };
@@ -37,16 +41,29 @@ export function defineJQueryComponent(name, Component) {
 
     return this.each(function () {
       const $this = $(this);
-      const data = $this.data(cName);
-      const props = $.extend({}, $this.data(), typeof option === 'object' && option);
+      const data = $this.data(ns);
 
-      if (!data) $this.data(cName, new Constructor(this, props));
-      else if (key && typeof data[key] === 'function') data[key](arg, ...args);
-      else if (typeof option === 'object' && option) $.extend(data, option);
+      if (!data) {
+        const { defaults, types } = Component;
+        const dataProps = $this.data();
+
+        Object.keys(defaults).forEach((dft) => {
+          if (dataProps[dft]) {
+            dataProps[dft] = simpleType(types[dft], defaults[dft], dataProps[dft]);
+          }
+        });
+        const props = $.extend({}, dataProps, typeof option === 'object' && option);
+
+        $this.data(ns, new Constructor(this, props));
+      } else if (key && typeof data[key] === 'function') {
+        data[key](arg, ...args);
+      } else if (typeof option === 'object' && option) {
+        $.extend(data, option);
+      }
     });
   }
 
-  const fName = cName.split('.').pop();
+  const fName = ns.split('.').pop();
 
   const old = $.fn[fName];
 

@@ -13,10 +13,9 @@ import 'core-js/fn/string/trim'; // used by camelcase
 import camelCase from 'camelcase';
 import decamelize from 'decamelize';
 
-import { sSetup, sSetupDOM, sSetState, sGetEl, COMPONENT_FEATURE_TESTS } from './component';
-
-const Symbol = global.Symbol || (x => `_${x}`);
-export const sGetTemplate = Symbol('getTemplate');
+import { simpleType } from './common';
+import { sSetup, sSetupDOM, sSetState, sGetEl, sGetTemplate } from './symbols';
+import { COMPONENT_FEATURE_TESTS } from './component';
 
 export const CUSTOM_ELEMENT_FEATURE_TESTS = [
   ...COMPONENT_FEATURE_TESTS,
@@ -24,25 +23,9 @@ export const CUSTOM_ELEMENT_FEATURE_TESTS = [
   'customelements',
 ];
 
-// infers primitive types form `defVal` and applies it to `attr`
-function simpleType(defVal, attr) {
-  if (typeof defVal === 'boolean') {
-    return attr != null;
-  } else if (typeof defVal === 'number') {
-    if (attr != null) return Number(attr);
-    return defVal;
-  } else if (defVal && typeof defVal === 'object' /* && typeof defVal.length !== 'undefined' */) {
-    if (attr != null) return attr.split ? attr.split(',') : [];
-    return defVal;
-  } else if (typeof defVal === 'string') {
-    if (attr != null) return attr;
-    return defVal;
-  }
-  return undefined;
-}
-
 let circutBreaker;
 
+// TODO: integrate with ./types.js !?
 function setAttribute(key, val, silent = false) {
   const attrName = decamelize(key, '-');
 
@@ -50,8 +33,8 @@ function setAttribute(key, val, silent = false) {
 
   if (val === true) {
     this.setAttribute(attrName, '');
-  } else if ((val === false || val === null || val === undefined)
-           || (typeof val === 'object' && val.length === 0)) {
+  } else if ((val === false || val === null || val === undefined) ||
+             (typeof val === 'object' && val.length === 0)) {
     this.removeAttribute(attrName);
   } else if (val && typeof val === 'object' && val.length > 0 && val.join) {
     this.setAttribute(attrName, val.join(','));
@@ -63,13 +46,13 @@ function setAttribute(key, val, silent = false) {
 }
 
 function getStateFromAttributes() {
-  const { defaults } = this.constructor;
+  const { defaults, types } = this.constructor;
 
   const state = {};
   Object.keys(defaults).forEach((key) => {
     const attrName = decamelize(key, '-');
     const attr = this.getAttribute(attrName);
-    const value = simpleType(defaults[key], attr);
+    const value = simpleType(types[key], defaults[key], attr);
 
     if (value != null) {
       state[key] = value;
@@ -106,9 +89,9 @@ export function customElementMixin(C) {
       }
 
       if (oldAttr !== attr) {
-        const { defaults } = this.constructor;
+        const { defaults, types } = this.constructor;
         const key = camelCase(attrName);
-        const value = simpleType(defaults[key], attr);
+        const value = simpleType(types[key], defaults[key], attr);
 
         if (value != null) {
           this[key] = value;

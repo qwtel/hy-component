@@ -7,21 +7,15 @@ import 'core-js/fn/object/assign';
 import 'core-js/fn/object/define-property';
 import 'core-js/fn/object/keys';
 
+import { sSetup, sSetupDOM, sGetRoot, sGetEl, sFire, sSetState } from './symbols';
+
 export const COMPONENT_FEATURE_TESTS = [
   'customevent',
 ];
 
 const Symbol = global.Symbol || (x => `_${x}`);
-
 const sRoot = Symbol('root');
 const sState = Symbol('state');
-
-export const sSetup = Symbol('setup');
-export const sSetupDOM = Symbol('setupDOM');
-export const sGetRoot = Symbol('getRoot');
-export const sGetEl = Symbol('getElement');
-export const sFire = Symbol('fire');
-export const sSetState = Symbol('setState');
 
 function setupProperty(key, sideEffect) {
   Object.defineProperty(this, key, {
