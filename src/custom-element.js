@@ -13,15 +13,15 @@ import 'core-js/fn/string/trim'; // used by camelcase
 import camelCase from 'camelcase';
 import decamelize from 'decamelize';
 
-import { simpleType } from './common';
+import { Set, simpleType } from './common';
 import { sSetup, sSetupDOM, sSetState, sGetEl, sGetTemplate } from './symbols';
 import { COMPONENT_FEATURE_TESTS } from './component';
 
-export const CUSTOM_ELEMENT_FEATURE_TESTS = [
+export const CUSTOM_ELEMENT_FEATURE_TESTS = new Set([
   ...COMPONENT_FEATURE_TESTS,
   'template',
   'customelements',
-];
+]);
 
 let circutBreaker;
 

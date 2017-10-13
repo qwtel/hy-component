@@ -2,7 +2,23 @@
 // Copyright (c) 2017 Florian Klampfer <https://qwtel.com/>
 // Licensed under MIT
 
-import { boolean, number, array, string } from './types';
+import { array, arrayOf, boolean, number, regex, string } from './types';
+
+export { array, arrayOf, boolean, number, regex, string };
+
+// Quick-and-Dirty `Set` implementation.
+/* eslint-disable */
+export const Set = global.Set || function (a = []) {
+  a = a.filter((x, i) => i === a.indexOf(x));
+  a.size = a.length;
+  a.has = x => a.indexOf(x) > -1;
+  a.add = x => { if (!a.has(x)) { a.size++; a.push(x); } return a; };
+  a.delete = x => { let t; if (t = a.has(x)) { a.size--; delete a[a.indexOf(x)]; } return t; };
+  a.keys = a.values = () => a[Symbol.iterator]();
+  a.clear = () => { while (a.pop()) {} a.size = 0; };
+  return a;
+};
+/* eslint-enable */
 
 export function simpleType(type, defVal, attr) {
   // Use the provided type, if any.
