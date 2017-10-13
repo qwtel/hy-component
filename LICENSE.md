@@ -1,7 +1,4 @@
----
-title: LICENSE
----
-
+# LICENSE
 ## MIT License
 
 Copyright 2017 Florian Klampfer <https://qwtel.com/>
