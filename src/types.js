@@ -25,7 +25,8 @@ export function number(attr) {
 }
 
 export function regex(attr) {
-  return RegExp(attr);
+  const match = attr.match(/^\/?(.*?)(\/([gimy]*))?$/);
+  return new RegExp(match[1], match[3]);
 }
 
 /*
