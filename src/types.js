@@ -3,7 +3,7 @@
 // Licensed under MIT
 
 export function array(attr) {
-  return attr.replace(/^\[/, '').replace(/\]$/, '').split(',');
+  return attr.trim().replace(/^\[?(.*?)\]?$/, '$1').split(',').map(x => x.trim());
 }
 
 export function arrayOf(type) {
