@@ -14,7 +14,7 @@ export function string(attr) {
   return attr;
 }
 
-export function boolean(attr) {
+export function bool(attr) {
   if (attr === true || attr === 'true') return true;
   else if (attr === false || attr === 'false') return false;
   return attr != null;
