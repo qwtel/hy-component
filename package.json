@@ -22,7 +22,7 @@
     "eslint-plugin-react": "7.5.1"
   },
   "dependencies": {
-    "attr-types": "^1.0.0-pre.0",
+    "attr-types": "^1.0.0-pre.2",
     "camelcase": "^4.1.0",
     "core-js": "^2.5.1",
     "decamelize": "^1.2.0",
