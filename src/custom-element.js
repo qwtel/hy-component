@@ -12,8 +12,9 @@ import 'core-js/fn/string/trim'; // used by camelcase
 
 import camelCase from 'camelcase';
 import decamelize from 'decamelize';
+import { Set } from 'qd-set';
 
-import { Set, simpleType } from './common';
+import { simpleType } from './common';
 import { sSetup, sSetupDOM, sSetState, sGetEl, sGetTemplate } from './symbols';
 import { COMPONENT_FEATURE_TESTS } from './component';
 

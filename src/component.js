@@ -7,7 +7,8 @@ import 'core-js/fn/object/assign';
 import 'core-js/fn/object/define-property';
 import 'core-js/fn/object/keys';
 
-import { Set } from './common';
+import { Set } from 'qd-set';
+
 import { sSetup, sSetupDOM, sGetRoot, sGetEl, sFire, sSetState } from './symbols';
 
 export const COMPONENT_FEATURE_TESTS = new Set([

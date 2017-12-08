@@ -4,8 +4,8 @@
   "description": "Tools for building web components that work across popular UI frameworks.",
   "main": "./src/component.js",
   "scripts": {
-    "test": "echo \"Warning: no test specified\" && exit 0",
     "lint": "eslint src",
+    "test": "echo \"Warning: no test specified\" && exit 0",
     "prepare": "npm run lint && npm run test"
   },
   "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
@@ -25,7 +25,8 @@
   "dependencies": {
     "camelcase": "^4.1.0",
     "core-js": "^2.5.1",
-    "decamelize": "^1.2.0"
+    "decamelize": "^1.2.0",
+    "qd-set": "^1.0.0-pre.2"
   },
   "optionalDependencies": {
     "jquery": "^3.2.1"
