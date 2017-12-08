@@ -27,22 +27,23 @@ export const CUSTOM_ELEMENT_FEATURE_TESTS = new Set([
 let circutBreaker;
 
 // TODO: integrate with ./types.js !?
-function setAttribute(key, val, silent = false) {
+function setAttribute(type, key, val, silent = false) {
   const attrName = decamelize(key, '-');
 
   if (silent) circutBreaker = attrName;
 
-  if (val === true) {
-    this.setAttribute(attrName, '');
-  } else if ((val === false || val === null || val === undefined) ||
-             (typeof val === 'object' && val.length === 0)) {
+  if (process.env.DEBUG && (!type || !type.stringify)) {
+    console.warn(`No type provided for key '${key}'`);
+  }
+
+  const attr = type.stringify(val);
+
+  if (attr === null || attr === 'false') {
     this.removeAttribute(attrName);
-  } else if (val && typeof val === 'object' && val.length > 0 && val.join) {
-    this.setAttribute(attrName, val.join(','));
-  } else if (typeof val === 'string' || typeof val === 'number') {
-    this.setAttribute(attrName, val);
-  } else if (process.env.DEBUG) {
-    console.warn(`Unrecognized type for key '${key}' with value`, val);
+  } else if (attr === 'true') {
+    this.setAttribute(attrName, '');
+  } else {
+    this.setAttribute(attrName, attr);
   }
 }
 
@@ -64,8 +65,8 @@ function getStateFromAttributes() {
 }
 
 function reflectAttributeChanges() {
-  const { defaults } = this.constructor;
-  Object.keys(defaults).forEach(key => setAttribute.call(this, key, this[key]));
+  const { defaults, types } = this.constructor;
+  Object.keys(defaults).forEach(key => setAttribute.call(this, types[key], key, this[key]));
 }
 
 // function str(s) { return s === '' ? '<empty>' : s; }
