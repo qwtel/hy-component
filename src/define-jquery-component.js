@@ -13,9 +13,13 @@ import 'core-js/fn/object/keys';
 // jQuery is an optional dependency
 import $ from 'jquery'; // eslint-disable-line import/no-extraneous-dependencies
 
-import { simpleType } from './common';
+import { Set } from 'qd-set';
+
+import { parseType } from './common';
 import { sSetup, sSetupDOM, sFire } from './symbols';
 import { VanillaComponent } from './vanilla';
+
+export { Set };
 
 export { sSetup, sSetupDOM };
 
@@ -49,7 +53,8 @@ export function defineJQueryComponent(name, Component) {
 
         Object.keys(defaults).forEach((dft) => {
           if (dataProps[dft]) {
-            dataProps[dft] = simpleType(types[dft], defaults[dft], dataProps[dft]);
+            const value = parseType(types[dft], dataProps[dft]);
+            dataProps[dft] = value != null ? value : Component.defaults[dft];
           }
         });
         const props = $.extend({}, dataProps, typeof option === 'object' && option);

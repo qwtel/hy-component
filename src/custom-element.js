@@ -14,9 +14,11 @@ import camelCase from 'camelcase';
 import decamelize from 'decamelize';
 import { Set } from 'qd-set';
 
-import { simpleType } from './common';
+import { parseType } from './common';
 import { sSetup, sSetupDOM, sSetState, sGetEl, sGetTemplate } from './symbols';
 import { COMPONENT_FEATURE_TESTS } from './component';
+
+export { Set };
 
 export const CUSTOM_ELEMENT_FEATURE_TESTS = new Set([
   ...COMPONENT_FEATURE_TESTS,
@@ -27,10 +29,14 @@ export const CUSTOM_ELEMENT_FEATURE_TESTS = new Set([
 let circutBreaker;
 
 // TODO: integrate with ./types.js !?
-function setAttribute(type, key, val, silent = false) {
+function setAttribute(key, val, silent = false) {
   const attrName = decamelize(key, '-');
 
   if (silent) circutBreaker = attrName;
+
+  const { types /* , defaultAttrs */ } = this.constructor;
+  const type = types[key];
+  // const defaultAttr = defaultAttrs[key];
 
   if (process.env.DEBUG && (!type || !type.stringify)) {
     console.warn(`No type provided for key '${key}'`);
@@ -38,44 +44,46 @@ function setAttribute(type, key, val, silent = false) {
 
   const attr = type.stringify(val);
 
-  if (attr === null || attr === 'false') {
+  if (attr == null) {
     this.removeAttribute(attrName);
-  } else if (attr === 'true') {
-    this.setAttribute(attrName, '');
   } else {
     this.setAttribute(attrName, attr);
   }
 }
 
 function getStateFromAttributes() {
-  const { defaults, types } = this.constructor;
+  const { types } = this.constructor;
 
   const state = {};
-  Object.keys(defaults).forEach((key) => {
+  Object.keys(types).forEach((key) => {
     const attrName = decamelize(key, '-');
-    const attr = this.getAttribute(attrName);
-    const value = simpleType(types[key], defaults[key], attr);
-
-    if (value != null) {
-      state[key] = value;
-    }
+    const attr = this.hasAttribute(attrName) ? this.getAttribute(attrName) : null;
+    console.log(attrName, attr);
+    const value = parseType(types[key], attr);
+    if (value != null) state[key] = value;
   });
+
+  console.log(state);
 
   return state;
 }
 
 function reflectAttributeChanges() {
-  const { defaults, types } = this.constructor;
-  Object.keys(defaults).forEach(key => setAttribute.call(this, types[key], key, this[key]));
-}
+  const { types /* , defaults */ } = this.constructor;
 
-// function str(s) { return s === '' ? '<empty>' : s; }
+  // this.constructor.defaultAttrs = {};
+  // Object.keys(defaults).forEach((key) => {
+  //   this.constructor.defaultAttrs[key] = types[key].stringify(defaults[key]);
+  // });
+
+  Object.keys(types).forEach(key => setAttribute.call(this, key, this[key]));
+}
 
 export function customElementMixin(C) {
   return class extends C {
     static getObservedAttributes() {
-      const { defaults } = this;
-      return Object.keys(defaults).map(x => decamelize(x, '-'));
+      const { types } = this;
+      return Object.keys(types).map(x => decamelize(x, '-'));
     }
 
     /* @override */
@@ -91,13 +99,11 @@ export function customElementMixin(C) {
       }
 
       if (oldAttr !== attr) {
-        const { defaults, types } = this.constructor;
+        const { types } = this.constructor;
         const key = camelCase(attrName);
-        const value = simpleType(types[key], defaults[key], attr);
-
-        if (value != null) {
-          this[key] = value;
-        }
+        console.log(attrName, key, attr);
+        const value = parseType(types[key], attr);
+        this[key] = value != null ? value : this.constructor.defaults[key];
       }
     }
 

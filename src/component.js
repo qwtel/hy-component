@@ -11,6 +11,8 @@ import { Set } from 'qd-set';
 
 import { sSetup, sSetupDOM, sGetRoot, sGetEl, sFire, sSetState } from './symbols';
 
+export { Set };
+
 export const COMPONENT_FEATURE_TESTS = new Set([
   'customevent',
 ]);
