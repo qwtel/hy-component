@@ -1,6 +1,6 @@
 {
   "name": "hy-component",
-  "version": "1.0.0-hydejack.12",
+  "version": "1.0.0-hydejack.13",
   "description": "Tools for building web components that work across popular UI frameworks.",
   "main": "./src/component.js",
   "scripts": {
