@@ -58,12 +58,9 @@ function getStateFromAttributes() {
   Object.keys(types).forEach((key) => {
     const attrName = decamelize(key, '-');
     const attr = this.hasAttribute(attrName) ? this.getAttribute(attrName) : null;
-    console.log(attrName, attr);
     const value = parseType(types[key], attr);
     if (value != null) state[key] = value;
   });
-
-  console.log(state);
 
   return state;
 }
@@ -101,7 +98,6 @@ export function customElementMixin(C) {
       if (oldAttr !== attr) {
         const { types } = this.constructor;
         const key = camelCase(attrName);
-        console.log(attrName, key, attr);
         const value = parseType(types[key], attr);
         this[key] = value != null ? value : this.constructor.defaults[key];
       }
