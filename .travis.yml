@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+- node
+deploy:
+  provider: npm
+  email: mail@qwtel.com
+  api_key:
+    secure: GQjndz/J8HMG/ccRGQhXH68BtYR4G4lb/9mrxn7IhvqG1FzKSjcVgAoVBuTvb9UjTSGiiKrPabPotRP2QAVJYeqUUrgpeAswa6BEQ0hsxm1rSQouVpEMTJcWfzEynGsBhL6C9tXl2r9ZEn3UrM92hB7sPPZB82tu8RfSmdlzyNPyVsUShIuMBcpcqGlMI5/LN0ToHJQqsShccQrAkljKrvlG0XLWeGr8jttZFig0kB7Tb1Wg1cNxIQ539zv3iLnHNH2ToYeJYpFTTSCxcvZi5LMKlkekHn407ur0MzenumSmvjPTLVF0U5YiEfNVJqOhMbqH7S1HgeNYoFNVFycSw06zpqUCbSH64hW7ul6IisF/UiDb6dUPpoqgLG93Ka5FwCCNCVd8MNHBA0277Jur9HOMmDuF8po0IjIMU9ASBO8Lgpi94MjnRQ2xNuhGWxkkWX9rn8Vg/lpI5UDotvhi5iyIOhf+6CeOpe2D3kKGYcr04yCt8MEqzvsZL+jvxV3RDtKPbOWHJIWi+VzzJsnTI7JcfVs8zUo8UlfSANalFRj/MC027h1J//I349KC7KGpBpaa1EYM3ikEHvHoorB++w5q+vbjg6FkuIEDGv8iNy0+H59/y7cQOjSqweuGBhA82KgFM/8Ma2LZYCvwOEWHQeax0pvqOeRIsZ8VzKbm5j4=
+  on:
+    tags: true
+    repo: qwtel/hy-component
+  skip_cleanup: true

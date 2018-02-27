@@ -2,31 +2,32 @@
   "name": "hy-component",
   "version": "1.0.0-hydejack.13",
   "description": "Tools for building web components that work across popular UI frameworks.",
-  "main": "./src/component.js",
+  "main": "lib/component.js",
   "scripts": {
-    "lint": "eslint src",
-    "test": "echo \"Warning: no test specified\" && exit 0",
-    "prepare": "npm run lint && npm run test"
+    "test": "eslint src",
+    "build": "babel src --out-dir lib",
+    "prepublishOnly": "npm run test && npm run build"
   },
   "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
   "license": "MIT",
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babelify": "^8.0.0",
     "envify": "^4.1.0",
     "eslint": "4.18.1",
     "eslint-config-airbnb": "16.1.0",
-    "eslint-plugin-import": "2.8.0",
+    "eslint-plugin-import": "2.9.0",
     "eslint-plugin-jsx-a11y": "6.0.3",
     "eslint-plugin-react": "7.7.0"
   },
   "dependencies": {
-    "attr-types": "^1.0.0",
+    "attr-types": "^1.0.1",
     "camelcase": "^4.1.0",
     "core-js": "^2.5.3",
     "decamelize": "^2.0.0",
-    "qd-set": "^1.0.0"
+    "qd-set": "^1.0.1"
   },
   "optionalDependencies": {
     "jquery": "^3.3.1"
