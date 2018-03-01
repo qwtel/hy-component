@@ -15,7 +15,6 @@ import decamelize from 'decamelize';
 import { Set } from 'qd-set';
 
 import { parseType } from './common';
-import { sSetup, sSetupDOM, sSetState, sGetEl, sGetTemplate } from './symbols';
 import { COMPONENT_FEATURE_TESTS } from './component';
 
 export { Set };
@@ -85,7 +84,7 @@ export function customElementMixin(C) {
 
     /* @override */
     connectedCallback() {
-      this[sSetup]();
+      this.setupComponent();
     }
 
     /* @override */
@@ -104,21 +103,21 @@ export function customElementMixin(C) {
     }
 
     /* @override */
-    [sSetup]() {
-      super[sSetup](this, getStateFromAttributes.call(this));
+    setupComponent() {
+      super.setupComponent(this, getStateFromAttributes.call(this));
       reflectAttributeChanges.call(this);
       return this;
     }
 
     /* @override */
-    [sSetState](key, value) {
-      super[sSetState](key, value);
+    setInternalState(key, value) {
+      super.setInternalState(key, value);
       setAttribute.call(this, key, value, true);
     }
 
     /* @override */
-    [sSetupDOM](el) {
-      const instance = this[sGetTemplate]();
+    setupShadowDOM(el) {
+      const instance = this.getTemplate();
       if (instance) {
         if ('attachShadow' in Element.prototype) {
           el.attachShadow({ mode: 'open' });
@@ -132,11 +131,11 @@ export function customElementMixin(C) {
     }
 
     /* @override */
-    [sGetEl]() {
+    getEl() {
       return this;
     }
 
-    [sGetTemplate]() {
+    getTemplate() {
       const { componentName } = this.constructor;
 
       return document

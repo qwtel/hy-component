@@ -9,8 +9,6 @@ import 'core-js/fn/object/keys';
 
 import { Set } from 'qd-set';
 
-import { sSetup, sSetupDOM, sGetRoot, sGetEl, sFire, sSetState } from './symbols';
-
 export { Set };
 
 export const COMPONENT_FEATURE_TESTS = new Set([
@@ -26,7 +24,7 @@ function setupProperty(key, sideEffect) {
     get: () => this[sState][key],
     set: (value) => {
       const oldValue = this[sState][key];
-      this[sSetState](key, value);
+      this.setInternalState(key, value);
       if (sideEffect) sideEffect.call(this, value, oldValue);
     },
     enumerable: true,
@@ -48,14 +46,14 @@ class Component {}
 export function componentMixin(C = Component) {
   return class extends C {
     get root() {
-      return this[sGetRoot]();
+      return this.getRoot();
     }
 
     get el() {
-      return this[sGetEl]();
+      return this.getEl();
     }
 
-    [sSetup](el, state) {
+    setupComponent(el, state) {
       const { defaults } = this.constructor;
 
       if (process.env.DEBUG) {
@@ -67,29 +65,29 @@ export function componentMixin(C = Component) {
 
       this[sState] = Object.assign({}, defaults, state);
       setupProperties.call(this);
-      this[sRoot] = this[sSetupDOM](el);
+      this[sRoot] = this.setupShadowDOM(el);
       return this;
     }
 
-    [sSetupDOM](el) {
+    setupShadowDOM(el) {
       return el;
     }
 
-    [sGetRoot]() {
+    getRoot() {
       return this[sRoot];
     }
 
-    [sGetEl]() {
+    getEl() {
       return this[sRoot];
     }
 
-    [sFire](eventName, data) {
+    fireEvent(eventName, data) {
       const { componentName } = this.constructor;
       const event = new CustomEvent(`${componentName}-${eventName}`, data);
       this.el.dispatchEvent(event);
     }
 
-    [sSetState](key, value) {
+    setInternalState(key, value) {
       this[sState][key] = value;
     }
   };

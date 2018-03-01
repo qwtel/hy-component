@@ -16,12 +16,9 @@ import $ from 'jquery'; // eslint-disable-line import/no-extraneous-dependencies
 import { Set } from 'qd-set';
 
 import { parseType } from './common';
-import { sSetup, sSetupDOM, sFire } from './symbols';
 import { VanillaComponent } from './vanilla';
 
 export { Set };
-
-export { sSetup, sSetupDOM };
 
 export const JQueryComponent = VanillaComponent;
 
@@ -29,12 +26,12 @@ export function defineJQueryComponent(name, Component) {
   const ns = name.toLowerCase();
 
   const Constructor = class extends Component {
-    [sSetupDOM](el) {
-      this.$element = super[sSetupDOM]($(el));
+    setupShadowDOM(el) {
+      this.$element = super.setupShadowDOM($(el));
       return this.$element[0];
     }
 
-    [sFire](eventName, data) {
+    fireEvent(eventName, data) {
       const event = $.Event(`${eventName}.${ns}`, data);
       this.$element.trigger(event);
     }

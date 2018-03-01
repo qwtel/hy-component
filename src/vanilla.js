@@ -4,14 +4,10 @@
 
 import { Set } from 'qd-set';
 
-import { sSetup, sSetupDOM } from './symbols';
-
 export { Set };
 
 export class VanillaComponent {
   constructor(el, props) {
-    this[sSetup](el, props);
+    this.setupComponent(el, props);
   }
 }
-
-export { sSetup, sSetupDOM };
