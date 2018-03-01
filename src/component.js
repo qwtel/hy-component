@@ -66,11 +66,16 @@ export function componentMixin(C = Component) {
       this[sState] = Object.assign({}, defaults, state);
       setupProperties.call(this);
       this[sRoot] = this.setupShadowDOM(el);
-      return this;
     }
 
     setupShadowDOM(el) {
       return el;
+    }
+
+    teardownComponent() {
+    }
+
+    adoptComponent() {
     }
 
     getRoot() {

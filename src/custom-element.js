@@ -3,6 +3,7 @@
 // Licensed under MIT
 
 import 'core-js/fn/array/for-each';
+import 'core-js/fn/array/from';
 import 'core-js/fn/array/map';
 import 'core-js/fn/number/constructor';
 import 'core-js/fn/object/keys';
@@ -82,12 +83,18 @@ export function customElementMixin(C) {
       return Object.keys(types).map(x => decamelize(x, '-'));
     }
 
-    /* @override */
     connectedCallback() {
       this.setupComponent();
     }
 
-    /* @override */
+    disconnectedCallback() {
+      this.teardownComponent();
+    }
+
+    adoptedCallback() {
+      this.adoptComponent();
+    }
+
     attributeChangedCallback(attrName, oldAttr, attr) {
       if (circutBreaker === attrName) {
         circutBreaker = undefined;
@@ -102,20 +109,17 @@ export function customElementMixin(C) {
       }
     }
 
-    /* @override */
     setupComponent() {
       super.setupComponent(this, getStateFromAttributes.call(this));
       reflectAttributeChanges.call(this);
       return this;
     }
 
-    /* @override */
     setInternalState(key, value) {
       super.setInternalState(key, value);
       setAttribute.call(this, key, value, true);
     }
 
-    /* @override */
     setupShadowDOM(el) {
       const instance = this.getTemplate();
       if (instance) {
@@ -130,7 +134,6 @@ export function customElementMixin(C) {
       return el;
     }
 
-    /* @override */
     getEl() {
       return this;
     }
