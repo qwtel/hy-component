@@ -28,15 +28,13 @@ export const CUSTOM_ELEMENT_FEATURE_TESTS = new Set([
 
 let circutBreaker;
 
-// TODO: integrate with ./types.js !?
 function setAttribute(key, val, silent = false) {
   const attrName = decamelize(key, '-');
 
   if (silent) circutBreaker = attrName;
 
-  const { types /* , defaultAttrs */ } = this.constructor;
+  const { types } = this.constructor;
   const type = types[key];
-  // const defaultAttr = defaultAttrs[key];
 
   if (process.env.DEBUG && (!type || !type.stringify)) {
     console.warn(`No type provided for key '${key}'`);
@@ -66,13 +64,7 @@ function getStateFromAttributes() {
 }
 
 function reflectAttributeChanges() {
-  const { types /* , defaults */ } = this.constructor;
-
-  // this.constructor.defaultAttrs = {};
-  // Object.keys(defaults).forEach((key) => {
-  //   this.constructor.defaultAttrs[key] = types[key].stringify(defaults[key]);
-  // });
-
+  const { types } = this.constructor;
   Object.keys(types).forEach(key => setAttribute.call(this, key, this[key]));
 }
 
@@ -83,12 +75,18 @@ export function customElementMixin(C) {
       return Object.keys(types).map(x => decamelize(x, '-'));
     }
 
+    constructor() {
+      super();
+      this.setupComponent(this, getStateFromAttributes.call(this));
+      reflectAttributeChanges.call(this);
+    }
+
     connectedCallback() {
-      this.setupComponent();
+      this.connectComponent();
     }
 
     disconnectedCallback() {
-      this.teardownComponent();
+      this.disconnectComponent();
     }
 
     adoptedCallback() {
@@ -96,23 +94,17 @@ export function customElementMixin(C) {
     }
 
     attributeChangedCallback(attrName, oldAttr, attr) {
-      if (circutBreaker === attrName) {
-        circutBreaker = undefined;
-        return;
-      }
-
-      if (oldAttr !== attr) {
+      if (circutBreaker === attrName) circutBreaker = undefined;
+      else if (oldAttr !== attr) {
         const { types } = this.constructor;
+
         const key = camelCase(attrName);
         const value = parseType(types[key], attr);
-        this[key] = value != null ? value : this.constructor.defaults[key];
-      }
-    }
 
-    setupComponent() {
-      super.setupComponent(this, getStateFromAttributes.call(this));
-      reflectAttributeChanges.call(this);
-      return this;
+        this[key] = value != null
+          ? value
+          : this.constructor.defaults[key];
+      }
     }
 
     setInternalState(key, value) {

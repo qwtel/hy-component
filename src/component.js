@@ -24,7 +24,7 @@ function setupProperty(key, sideEffect) {
     get: () => this[sState][key],
     set: (value) => {
       const oldValue = this[sState][key];
-      this.setInternalState(key, value);
+      this[sState][key] = value;
       if (sideEffect) sideEffect.call(this, value, oldValue);
     },
     enumerable: true,
@@ -45,13 +45,9 @@ class Component {}
 
 export function componentMixin(C = Component) {
   return class extends C {
-    get root() {
-      return this.getRoot();
-    }
+    get root() { return this.getRoot(); }
 
-    get el() {
-      return this.getEl();
-    }
+    get el() { return this.getEl(); }
 
     setupComponent(el, state) {
       const { defaults } = this.constructor;
@@ -68,23 +64,17 @@ export function componentMixin(C = Component) {
       this[sRoot] = this.setupShadowDOM(el);
     }
 
-    setupShadowDOM(el) {
-      return el;
-    }
+    setupShadowDOM(el) { return el; }
 
-    teardownComponent() {
-    }
+    connectComponent() {}
 
-    adoptComponent() {
-    }
+    disconnectComponent() {}
 
-    getRoot() {
-      return this[sRoot];
-    }
+    adoptComponent() {}
 
-    getEl() {
-      return this[sRoot];
-    }
+    getRoot() { return this[sRoot]; }
+
+    getEl() { return this[sRoot]; }
 
     fireEvent(eventName, data) {
       const { componentName } = this.constructor;
@@ -92,8 +82,6 @@ export function componentMixin(C = Component) {
       this.el.dispatchEvent(event);
     }
 
-    setInternalState(key, value) {
-      this[sState][key] = value;
-    }
+    setInternalState(key, value) { this[sState][key] = value; }
   };
 }

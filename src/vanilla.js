@@ -9,5 +9,6 @@ export { Set };
 export class VanillaComponent {
   constructor(el, props) {
     this.setupComponent(el, props);
+    this.connectComponent();
   }
 }
