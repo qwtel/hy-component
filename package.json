@@ -4,9 +4,11 @@
   "description": "Tools for building web components that work across popular UI frameworks.",
   "main": "lib/component.js",
   "scripts": {
+    "clean": "rm *.js",
     "test": "eslint src",
-    "build": "babel src --out-dir lib",
-    "prepublishOnly": "npm run test && npm run build"
+    "build": "babel src --out-dir .",
+    "watch": "babel src --out-dir . --watch",
+    "prepublishOnly": "npm run test && npm run clean && npm run build"
   },
   "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
   "license": "MIT",
