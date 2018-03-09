@@ -63,10 +63,12 @@ function getStateFromAttributes() {
   return state;
 }
 
+/*
 function reflectAttributeChanges() {
   const { types } = this.constructor;
   Object.keys(types).forEach(key => setAttribute.call(this, key, this[key]));
 }
+*/
 
 export function customElementMixin(C) {
   return class extends C {
@@ -78,7 +80,7 @@ export function customElementMixin(C) {
     constructor() {
       super();
       this.setupComponent(this, getStateFromAttributes.call(this));
-      reflectAttributeChanges.call(this);
+      /* reflectAttributeChanges.call(this); */
     }
 
     connectedCallback() {
