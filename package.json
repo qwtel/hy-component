@@ -4,7 +4,7 @@
   "description": "Tools for building web components that work across popular UI frameworks.",
   "main": "lib/component.js",
   "scripts": {
-    "clean": "rm *.js",
+    "clean": "rm -rf *.js",
     "test": "eslint src",
     "build": "babel src --out-dir .",
     "watch": "babel src --out-dir . --watch",
