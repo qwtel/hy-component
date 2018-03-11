@@ -80,7 +80,10 @@ export function customElementMixin(C) {
     constructor() {
       super();
       this.setupComponent(this, getStateFromAttributes.call(this));
-      /* reflectAttributeChanges.call(this); */
+    }
+
+    get template() {
+      return this.getTemplate();
     }
 
     connectedCallback() {
