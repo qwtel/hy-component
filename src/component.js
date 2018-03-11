@@ -24,7 +24,7 @@ function setupProperty(key, sideEffect) {
     get: () => this[sState][key],
     set: (value) => {
       const oldValue = this[sState][key];
-      this[sState][key] = value;
+      this.setInternalState(key, value);
       if (sideEffect) sideEffect.call(this, value, oldValue);
     },
     enumerable: true,
