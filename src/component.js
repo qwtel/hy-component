@@ -19,69 +19,67 @@ const Symbol = global.Symbol || (x => `_${x}`);
 const sRoot = Symbol('root');
 const sState = Symbol('state');
 
-function setupProperty(key, sideEffect) {
-  Object.defineProperty(this, key, {
-    get: () => this[sState][key],
-    set: (value) => {
-      const oldValue = this[sState][key];
-      this.setInternalState(key, value);
-      if (sideEffect) sideEffect.call(this, value, oldValue);
-    },
-    enumerable: true,
-    configurable: true,
-  });
-}
-
-function setupProperties() {
-  const { sideEffects } = this.constructor;
-
-  Object.keys(this[sState]).forEach((key) => {
-    const sideEffect = sideEffects[key];
-    setupProperty.call(this, key, sideEffect);
-  });
-}
-
 class Component {}
 
-export function componentMixin(C = Component) {
-  return class extends C {
-    get root() { return this.getRoot(); }
+export const componentMixin = (C = Component) => class extends C {
+  get root() { return this.getRoot(); }
 
-    get el() { return this.getEl(); }
+  get el() { return this.getEl(); }
 
-    setupComponent(el, state) {
-      const { defaults } = this.constructor;
+  setupComponent(el, state) {
+    const { defaults } = this.constructor;
 
-      if (process.env.DEBUG) {
-        const { componentName, sideEffects } = this.constructor;
-        if (!componentName) console.warn('Component needs to have a name, e.g. `my-tag`. To set a name, provide a static getter called `componentName`.');
-        if (!defaults) console.warn('No default properties provided. Implement a static getter called `defaults`.');
-        if (!sideEffects) console.warn('No side effects provided. Implement a static getter called `sideEffects`.');
-      }
-
-      this[sState] = Object.assign({}, defaults, state);
-      setupProperties.call(this);
-      this[sRoot] = this.setupShadowDOM(el);
+    if (process.env.DEBUG) {
+      const { componentName, sideEffects } = this.constructor;
+      if (!componentName) console.warn('Component needs to have a name, e.g. `my-tag`. To set a name, provide a static getter called `componentName`.');
+      if (!defaults) console.warn('No default properties provided. Implement a static getter called `defaults`.');
+      if (!sideEffects) console.warn('No side effects provided. Implement a static getter called `sideEffects`.');
     }
 
-    setupShadowDOM(el) { return el; }
+    this[sState] = Object.assign({}, defaults, state);
+    this.setupProperties(this);
+    this[sRoot] = this.setupShadowDOM(el);
+  }
 
-    connectComponent() {}
+  setupShadowDOM(el) { return el; }
 
-    disconnectComponent() {}
+  connectComponent() {}
 
-    adoptComponent() {}
+  disconnectComponent() {}
 
-    getRoot() { return this[sRoot]; }
+  adoptComponent() {}
 
-    getEl() { return this[sRoot]; }
+  getRoot() { return this[sRoot]; }
 
-    fireEvent(eventName, data) {
-      const { componentName } = this.constructor;
-      const event = new CustomEvent(`${componentName}-${eventName}`, data);
-      this.el.dispatchEvent(event);
-    }
+  getEl() { return this[sRoot]; }
 
-    setInternalState(key, value) { this[sState][key] = value; }
-  };
-}
+  fireEvent(eventName, data) {
+    const { componentName } = this.constructor;
+    const event = new CustomEvent(`${componentName}-${eventName}`, data);
+    this.el.dispatchEvent(event);
+  }
+
+  setInternalState(key, value) { this[sState][key] = value; }
+
+  setupProperties() {
+    const { sideEffects } = this.constructor;
+
+    Object.keys(this[sState]).forEach((key) => {
+      const sideEffect = sideEffects[key];
+      this.setupProperty(key, sideEffect);
+    });
+  }
+
+  setupProperty(key, sideEffect) {
+    Object.defineProperty(this, key, {
+      get: () => this[sState][key],
+      set: (value) => {
+        const oldValue = this[sState][key];
+        this.setInternalState(key, value);
+        if (sideEffect) sideEffect.call(this, value, oldValue);
+      },
+      enumerable: true,
+      configurable: true,
+    });
+  }
+};

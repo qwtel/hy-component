@@ -28,125 +28,123 @@ export const CUSTOM_ELEMENT_FEATURE_TESTS = new Set([
 
 let circutBreaker;
 
-function setAttribute(key, val, silent = false) {
-  const attrName = decamelize(key, '-');
-
-  if (silent) circutBreaker = attrName;
-
-  const { types } = this.constructor;
-  const type = types[key];
-
-  if (process.env.DEBUG && (!type || !type.stringify)) {
-    console.warn(`No type provided for key '${key}'`);
+export const customElementMixin = C => class extends C {
+  static getObservedAttributes() {
+    const { types } = this;
+    return Object.keys(types).map(x => decamelize(x, '-'));
   }
 
-  const attr = type.stringify(val);
-
-  if (attr == null) {
-    this.removeAttribute(attrName);
-  } else {
-    this.setAttribute(attrName, attr);
+  constructor(...args) {
+    super(...args);
+    this.setupComponent(this, this.getStateFromAttributes());
   }
-}
 
-function getStateFromAttributes() {
-  const { types } = this.constructor;
-
-  const state = {};
-  Object.keys(types).forEach((key) => {
+  reflectAttribute(key, val, silent = false) {
     const attrName = decamelize(key, '-');
-    const attr = this.hasAttribute(attrName) ? this.getAttribute(attrName) : null;
-    const value = parseType(types[key], attr);
-    if (value != null) state[key] = value;
-  });
 
-  return state;
-}
+    if (silent) circutBreaker = attrName;
 
-/*
-function reflectAttributeChanges() {
-  const { types } = this.constructor;
-  Object.keys(types).forEach(key => setAttribute.call(this, key, this[key]));
-}
-*/
+    const { types } = this.constructor;
+    const type = types[key];
 
-export function customElementMixin(C) {
-  return class extends C {
-    static getObservedAttributes() {
-      const { types } = this;
-      return Object.keys(types).map(x => decamelize(x, '-'));
+    if (process.env.DEBUG && (!type || !type.stringify)) {
+      console.warn(`No type provided for key '${key}'`);
     }
 
-    constructor() {
-      super();
-      this.setupComponent(this, getStateFromAttributes.call(this));
+    const attr = type.stringify(val);
+
+    if (attr == null) {
+      this.removeAttribute(attrName);
+    } else {
+      this.setAttribute(attrName, attr);
     }
+  }
 
-    get template() {
-      return this.getTemplate();
+  /*
+  reflectAttributeChanges() {
+    const { types } = this.constructor;
+    Object.keys(types).forEach(key => setAttribute.call(this, key, this[key]));
+  }
+  */
+
+  getStateFromAttributes() {
+    const { types } = this.constructor;
+
+    const state = {};
+    Object.keys(types).forEach((key) => {
+      const attrName = decamelize(key, '-');
+      const attr = this.hasAttribute(attrName) ? this.getAttribute(attrName) : null;
+      const value = parseType(types[key], attr);
+      if (value != null) state[key] = value;
+    });
+
+    return state;
+  }
+
+  get template() {
+    return this.getTemplate();
+  }
+
+  connectedCallback() {
+    this.connectComponent();
+  }
+
+  disconnectedCallback() {
+    this.disconnectComponent();
+  }
+
+  adoptedCallback() {
+    this.adoptComponent();
+  }
+
+  attributeChangedCallback(attrName, oldAttr, attr) {
+    if (circutBreaker === attrName) circutBreaker = undefined;
+    else if (oldAttr !== attr) {
+      const { types } = this.constructor;
+
+      const key = camelCase(attrName);
+      const value = parseType(types[key], attr);
+
+      this[key] = value != null
+        ? value
+        : this.constructor.defaults[key];
     }
+  }
 
-    connectedCallback() {
-      this.connectComponent();
-    }
+  setInternalState(key, value) {
+    super.setInternalState(key, value);
+    this.reflectAttribute(key, value, true);
+  }
 
-    disconnectedCallback() {
-      this.disconnectComponent();
-    }
-
-    adoptedCallback() {
-      this.adoptComponent();
-    }
-
-    attributeChangedCallback(attrName, oldAttr, attr) {
-      if (circutBreaker === attrName) circutBreaker = undefined;
-      else if (oldAttr !== attr) {
-        const { types } = this.constructor;
-
-        const key = camelCase(attrName);
-        const value = parseType(types[key], attr);
-
-        this[key] = value != null
-          ? value
-          : this.constructor.defaults[key];
+  setupShadowDOM(el) {
+    const instance = this.getTemplate();
+    if (instance) {
+      if ('attachShadow' in Element.prototype) {
+        el.attachShadow({ mode: 'open' });
+        el.shadowRoot.appendChild(instance);
+        return el.shadowRoot;
       }
+      if (process.env.DEBUG) console.warn('Component doesnt define a template. Intentional?');
+      throw Error('ShadowDOM API not supported');
     }
+    return el;
+  }
 
-    setInternalState(key, value) {
-      super.setInternalState(key, value);
-      setAttribute.call(this, key, value, true);
-    }
+  getEl() {
+    return this;
+  }
 
-    setupShadowDOM(el) {
-      const instance = this.getTemplate();
-      if (instance) {
-        if ('attachShadow' in Element.prototype) {
-          el.attachShadow({ mode: 'open' });
-          el.shadowRoot.appendChild(instance);
-          return el.shadowRoot;
-        }
-        if (process.env.DEBUG) console.warn('Component doesnt define a template. Intentional?');
-        throw Error('ShadowDOM API not supported');
-      }
-      return el;
-    }
+  getTemplate() {
+    const { componentName } = this.constructor;
 
-    getEl() {
-      return this;
-    }
-
-    getTemplate() {
-      const { componentName } = this.constructor;
-
-      return document
-        .querySelector(`link[href$="${componentName}.html"]`)
-        .import
-        .querySelector(`#${componentName}-template`)
-        .content
-        .cloneNode(true);
-    }
-  };
-}
+    return document
+      .querySelector(`link[href$="${componentName}.html"]`)
+      .import
+      .querySelector(`#${componentName}-template`)
+      .content
+      .cloneNode(true);
+  }
+};
 
 // This is a drop-in replacement for `HTMLElement` which is compatible with babel.
 export function CustomElement() {
