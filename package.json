@@ -3,7 +3,6 @@
   "version": "1.0.0-pre.4",
   "description": "Tools for building web components that work across popular UI frameworks.",
   "main": "es5/index.js",
-  "module": "esm/index.js",
   "scripts": {
     "clean": "rm -rf es5 esm",
     "test": "eslint src",
