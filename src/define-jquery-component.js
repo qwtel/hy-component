@@ -1,5 +1,5 @@
 // # src / define-jquery-compnent.js
-// Copyright (c) 2017 Florian Klampfer <https://qwtel.com/>
+// Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
 // Licensed under MIT
 
 // jQuery predates arrow functions and makes use of binding a functions's `this`,
@@ -7,8 +7,8 @@
 // We modify eslint to allow passing anonymous `function`s:
 /* eslint-disable func-names, consistent-return */
 
-import 'core-js/fn/array/for-each';
-import 'core-js/fn/object/keys';
+// import 'core-js/fn/array/for-each';
+// import 'core-js/fn/object/keys';
 
 // jQuery is an optional dependency
 import $ from 'jquery'; // eslint-disable-line import/no-extraneous-dependencies

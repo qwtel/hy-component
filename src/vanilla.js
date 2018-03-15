@@ -1,5 +1,5 @@
 // # src / vanilla.js
-// Copyright (c) 2017 Florian Klampfer <https://qwtel.com/>
+// Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
 // Licensed under MIT
 
 import { Set } from 'qd-set';

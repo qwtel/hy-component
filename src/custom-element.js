@@ -1,21 +1,19 @@
 // # src / custom-element.js
-// Copyright (c) 2017 Florian Klampfer <https://qwtel.com/>
+// Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
 // Licensed under MIT
 
-import 'core-js/fn/array/for-each';
-import 'core-js/fn/array/from';
-import 'core-js/fn/array/map';
-import 'core-js/fn/number/constructor';
-import 'core-js/fn/object/keys';
-import 'core-js/fn/object/set-prototype-of';
-import 'core-js/fn/reflect/construct';
-import 'core-js/fn/string/trim'; // used by camelcase
+// import 'core-js/fn/array/for-each';
+// import 'core-js/fn/array/from';
+// import 'core-js/fn/array/map';
+// import 'core-js/fn/number/constructor';
+// import 'core-js/fn/object/keys';
+// import 'core-js/fn/object/set-prototype-of';
+// import 'core-js/fn/reflect/construct';
+// import 'core-js/fn/string/trim'; // used by camelcase
 
-import camelCase from 'camelcase';
-import decamelize from 'decamelize';
 import { Set } from 'qd-set';
 
-import { parseType } from './common';
+import { parseType, camelCase, decamelize } from './common';
 import { COMPONENT_FEATURE_TESTS } from './component';
 
 export { Set };
@@ -26,12 +24,12 @@ export const CUSTOM_ELEMENT_FEATURE_TESTS = new Set([
   'customelements',
 ]);
 
-let circutBreaker;
+let circutBreaker = null;
 
 export const customElementMixin = C => class extends C {
   static getObservedAttributes() {
     const { types } = this;
-    return Object.keys(types).map(x => decamelize(x, '-'));
+    return Object.keys(types).map(x => decamelize(x));
   }
 
   constructor(...args) {
@@ -40,7 +38,7 @@ export const customElementMixin = C => class extends C {
   }
 
   reflectAttribute(key, val, silent = false) {
-    const attrName = decamelize(key, '-');
+    const attrName = decamelize(key);
 
     if (silent) circutBreaker = attrName;
 
@@ -72,7 +70,7 @@ export const customElementMixin = C => class extends C {
 
     const state = {};
     Object.keys(types).forEach((key) => {
-      const attrName = decamelize(key, '-');
+      const attrName = decamelize(key);
       const attr = this.hasAttribute(attrName) ? this.getAttribute(attrName) : null;
       const value = parseType(types[key], attr);
       if (value != null) state[key] = value;
@@ -98,7 +96,7 @@ export const customElementMixin = C => class extends C {
   }
 
   attributeChangedCallback(attrName, oldAttr, attr) {
-    if (circutBreaker === attrName) circutBreaker = undefined;
+    if (circutBreaker === attrName) circutBreaker = null;
     else if (oldAttr !== attr) {
       const { types } = this.constructor;
 

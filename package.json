@@ -1,13 +1,15 @@
 {
   "name": "hy-component",
-  "version": "1.0.0-pre.2",
+  "version": "1.0.0-pre.3",
   "description": "Tools for building web components that work across popular UI frameworks.",
-  "main": "lib/component.js",
+  "main": "es5/index.js",
+  "module": "esm/index.js",
   "scripts": {
-    "clean": "rm -rf *.js",
+    "clean": "rm -rf es5 esm",
     "test": "eslint src",
-    "build": "babel src --out-dir .",
-    "watch": "babel src --out-dir . --watch",
+    "build": "npm run build:es5 & npm run build:esm & wait",
+    "build:es5": "NODE_ENV=es5 babel src --out-dir es5",
+    "build:esm": "NODE_ENV=esm babel src --out-dir esm",
     "prepublishOnly": "npm run test && npm run clean && npm run build"
   },
   "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
@@ -26,10 +28,7 @@
   },
   "dependencies": {
     "attr-types": "^1.0.1",
-    "camelcase": "^4.1.0",
-    "core-js": "^2.5.3",
-    "decamelize": "^2.0.0",
-    "qd-set": "^1.0.1"
+    "qd-set": "^2.0.0"
   },
   "optionalDependencies": {
     "jquery": "^3.3.1"
