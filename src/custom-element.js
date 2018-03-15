@@ -58,12 +58,10 @@ export const customElementMixin = C => class extends C {
     }
   }
 
-  /*
-  reflectAttributeChanges() {
+  reflectAttributes() {
     const { types } = this.constructor;
-    Object.keys(types).forEach(key => setAttribute.call(this, key, this[key]));
+    Object.keys(types).forEach(key => this.reflectAttribute(key, this[key], true));
   }
-  */
 
   getStateFromAttributes() {
     const { types } = this.constructor;
@@ -84,6 +82,7 @@ export const customElementMixin = C => class extends C {
   }
 
   connectedCallback() {
+    this.reflectAttributes();
     this.connectComponent();
   }
 
