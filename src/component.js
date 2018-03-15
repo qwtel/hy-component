@@ -11,9 +11,7 @@ import { Set } from 'qd-set';
 
 export { Set };
 
-export const COMPONENT_FEATURE_TESTS = new Set([
-  'customevent',
-]);
+export const COMPONENT_FEATURE_TESTS = new Set(['customevent']);
 
 const aSymbol = Symbol || (x => `_${x}`);
 const sRoot = aSymbol('root');
@@ -21,65 +19,84 @@ const sState = aSymbol('state');
 
 class Component {}
 
-export const componentMixin = (C = Component) => class extends C {
-  get root() { return this.getRoot(); }
-
-  get el() { return this.getEl(); }
-
-  setupComponent(el, state) {
-    const { defaults } = this.constructor;
-
-    if (process.env.DEBUG) {
-      const { componentName, sideEffects } = this.constructor;
-      if (!componentName) console.warn('Component needs to have a name, e.g. `my-tag`. To set a name, provide a static getter called `componentName`.');
-      if (!defaults) console.warn('No default properties provided. Implement a static getter called `defaults`.');
-      if (!sideEffects) console.warn('No side effects provided. Implement a static getter called `sideEffects`.');
+export const componentMixin = (C = Component) =>
+  class extends C {
+    get root() {
+      return this.getRoot();
     }
 
-    this[sState] = Object.assign({}, defaults, state);
-    this.setupProperties(this);
-    this[sRoot] = this.setupShadowDOM(el);
-  }
+    get el() {
+      return this.getEl();
+    }
 
-  setupShadowDOM(el) { return el; }
+    setupComponent(el, state) {
+      const { defaults } = this.constructor;
 
-  connectComponent() {}
+      if (process.env.DEBUG) {
+        const { componentName, sideEffects } = this.constructor;
+        if (!componentName) {
+          console.warn('Component needs to have a name, e.g. `my-tag`. To set a name, provide a static getter called `componentName`.');
+        }
+        if (!defaults) {
+          console.warn('No default properties provided. Implement a static getter called `defaults`.');
+        }
+        if (!sideEffects) {
+          console.warn('No side effects provided. Implement a static getter called `sideEffects`.');
+        }
+      }
 
-  disconnectComponent() {}
+      this[sState] = Object.assign({}, defaults, state);
+      this.setupProperties(this);
+      this[sRoot] = this.setupShadowDOM(el);
+    }
 
-  adoptComponent() {}
+    setupShadowDOM(el) {
+      return el;
+    }
 
-  getRoot() { return this[sRoot]; }
+    connectComponent() {}
 
-  getEl() { return this[sRoot]; }
+    disconnectComponent() {}
 
-  fireEvent(eventName, data) {
-    const { componentName } = this.constructor;
-    const event = new CustomEvent(`${componentName}-${eventName}`, data);
-    this.el.dispatchEvent(event);
-  }
+    adoptComponent() {}
 
-  setInternalState(key, value) { this[sState][key] = value; }
+    getRoot() {
+      return this[sRoot];
+    }
 
-  setupProperties() {
-    const { sideEffects } = this.constructor;
+    getEl() {
+      return this[sRoot];
+    }
 
-    Object.keys(this[sState]).forEach((key) => {
-      const sideEffect = sideEffects[key];
-      this.setupProperty(key, sideEffect);
-    });
-  }
+    fireEvent(eventName, data) {
+      const { componentName } = this.constructor;
+      const event = new CustomEvent(`${componentName}-${eventName}`, data);
+      this.el.dispatchEvent(event);
+    }
 
-  setupProperty(key, sideEffect) {
-    Object.defineProperty(this, key, {
-      get: () => this[sState][key],
-      set: (value) => {
-        const oldValue = this[sState][key];
-        this.setInternalState(key, value);
-        if (sideEffect) sideEffect.call(this, value, oldValue);
-      },
-      enumerable: true,
-      configurable: true,
-    });
-  }
-};
+    setInternalState(key, value) {
+      this[sState][key] = value;
+    }
+
+    setupProperties() {
+      const { sideEffects } = this.constructor;
+
+      Object.keys(this[sState]).forEach((key) => {
+        const sideEffect = sideEffects[key];
+        this.setupProperty(key, sideEffect);
+      });
+    }
+
+    setupProperty(key, sideEffect) {
+      Object.defineProperty(this, key, {
+        get: () => this[sState][key],
+        set: (value) => {
+          const oldValue = this[sState][key];
+          this.setInternalState(key, value);
+          if (sideEffect) sideEffect.call(this, value, oldValue);
+        },
+        enumerable: true,
+        configurable: true,
+      });
+    }
+  };
