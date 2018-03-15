@@ -6,9 +6,11 @@
   "scripts": {
     "clean": "rm -rf es5 esm",
     "test": "eslint src",
+    "format": "prettier-eslint --write \"src/**/*.js\"",
     "build": "npm run build:es5 & npm run build:esm & wait",
     "build:es5": "NODE_ENV=es5 babel src --out-dir es5",
     "build:esm": "NODE_ENV=esm babel src --out-dir esm",
+    "preversion": "npm run format && git add .",
     "prepublishOnly": "npm run test && npm run clean && npm run build"
   },
   "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
@@ -23,7 +25,8 @@
     "eslint-config-airbnb": "16.1.0",
     "eslint-plugin-import": "2.9.0",
     "eslint-plugin-jsx-a11y": "6.0.3",
-    "eslint-plugin-react": "7.7.0"
+    "eslint-plugin-react": "7.7.0",
+    "prettier-eslint-cli": "^4.7.1"
   },
   "dependencies": {
     "attr-types": "^1.0.1",
@@ -37,9 +40,7 @@
       [
         "babelify",
         {
-          "presets": [
-            "env"
-          ]
+          "presets": ["env"]
         }
       ],
       [
@@ -54,14 +55,7 @@
     "type": "git",
     "url": "git+https://github.com/qwtel/hy-component.git"
   },
-  "keywords": [
-    "webcomponents",
-    "web",
-    "components",
-    "vanilla",
-    "component",
-    "jquery"
-  ],
+  "keywords": ["webcomponents", "web", "components", "vanilla", "component", "jquery"],
   "bugs": {
     "url": "https://github.com/qwtel/hy-component/issues"
   },
