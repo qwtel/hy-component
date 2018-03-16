@@ -14,14 +14,14 @@ export { Set };
 export const COMPONENT_FEATURE_TESTS = new Set(['customevent']);
 
 const aSymbol = Symbol || (x => `_${x}`);
-const sRoot = aSymbol('root');
+const sRoot = aSymbol('sroot');
 const sState = aSymbol('state');
 
 class Component {}
 
 export const componentMixin = (C = Component) =>
   class extends C {
-    get root() {
+    get sroot() {
       return this.getRoot();
     }
 
