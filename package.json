@@ -40,7 +40,9 @@
       [
         "babelify",
         {
-          "presets": ["env"]
+          "presets": [
+            "env"
+          ]
         }
       ],
       [
@@ -55,7 +57,14 @@
     "type": "git",
     "url": "git+https://github.com/qwtel/hy-component.git"
   },
-  "keywords": ["webcomponents", "web", "components", "vanilla", "component", "jquery"],
+  "keywords": [
+    "webcomponents",
+    "web",
+    "components",
+    "vanilla",
+    "component",
+    "jquery"
+  ],
   "bugs": {
     "url": "https://github.com/qwtel/hy-component/issues"
   },
