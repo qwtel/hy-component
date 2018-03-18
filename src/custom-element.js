@@ -134,9 +134,8 @@ export const customElementMixin = C =>
 
     getTemplate() {
       const { componentName } = this.constructor;
-
       return document
-        .querySelector(`link[href$="${componentName}.html"]`)
+        .querySelector(`link[href*="${componentName}"]`)
         .import.querySelector(`#${componentName}-template`)
         .content.cloneNode(true);
     }
