@@ -11,17 +11,17 @@
 // import 'core-js/fn/reflect/construct';
 // import 'core-js/fn/string/trim'; // used by camelcase
 
-import { Set } from 'qd-set';
+import { Set } from "qd-set";
 
-import { parseType, camelCase, decamelize } from './common';
-import { COMPONENT_FEATURE_TESTS } from './component';
+import { parseType, camelCase, decamelize } from "./common";
+import { COMPONENT_FEATURE_TESTS } from "./component";
 
 export { Set };
 
 export const CUSTOM_ELEMENT_FEATURE_TESTS = new Set([
   ...COMPONENT_FEATURE_TESTS,
-  'template',
-  'customelements',
+  "template",
+  "customelements"
 ]);
 
 let circutBreaker = null;
@@ -70,9 +70,11 @@ export const customElementMixin = C =>
       const { types } = this.constructor;
 
       const state = {};
-      Object.keys(types).forEach((key) => {
+      Object.keys(types).forEach(key => {
         const attrName = decamelize(key);
-        const attr = this.hasAttribute(attrName) ? this.getAttribute(attrName) : null;
+        const attr = this.hasAttribute(attrName)
+          ? this.getAttribute(attrName)
+          : null;
         const value = parseType(types[key], attr);
         if (value != null) state[key] = value;
       });
@@ -117,13 +119,14 @@ export const customElementMixin = C =>
     setupShadowDOM(el) {
       const instance = this.getTemplate();
       if (instance) {
-        if ('attachShadow' in Element.prototype) {
-          el.attachShadow({ mode: 'open' });
+        if ("attachShadow" in Element.prototype) {
+          el.attachShadow({ mode: "open" });
           el.shadowRoot.appendChild(instance);
           return el.shadowRoot;
         }
-        if (process.env.DEBUG) console.warn('Component doesnt define a template. Intentional?');
-        throw Error('ShadowDOM API not supported');
+        if (process.env.DEBUG)
+          console.warn("Component doesnt define a template. Intentional?");
+        throw Error("ShadowDOM API not supported");
       }
       return el;
     }
@@ -143,7 +146,8 @@ export const customElementMixin = C =>
 
 // This is a drop-in replacement for `HTMLElement` which is compatible with babel.
 export function CustomElement() {
-  const HTMLElement = typeof window.HTMLElement === 'function' ? window.HTMLElement : () => {};
+  const HTMLElement =
+    typeof window.HTMLElement === "function" ? window.HTMLElement : () => {};
   return Reflect.construct(HTMLElement, [], this.__proto__.constructor); // eslint-disable-line
 }
 

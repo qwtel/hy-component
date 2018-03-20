@@ -2,7 +2,7 @@
 // Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
 // Licensed under MIT
 
-import { Set } from 'qd-set';
+import { Set } from "qd-set";
 
 export { Set };
 

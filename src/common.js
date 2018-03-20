@@ -11,7 +11,7 @@ export function parseType(type, attr) {
   return type ? type(attr) : attr;
 }
 
-export function decamelize(str, sep = '-') {
+export function decamelize(str, sep = "-") {
   return str
     .replace(/([a-z\d])([A-Z])/g, `$1${sep}$2`)
     .replace(/([A-Z]+)([A-Z][a-z\d]+)/g, `$1${sep}$2`)
@@ -57,10 +57,10 @@ export function camelCase(...args) {
   let str = [].map
     .call(args, x => x.trim())
     .filter(x => x.length)
-    .join('-');
+    .join("-");
 
   if (str.length === 0) {
-    return '';
+    return "";
   }
 
   if (str.length === 1) {
@@ -70,7 +70,7 @@ export function camelCase(...args) {
   str = preserveCamelCase(str);
 
   return str
-    .replace(/^[_.\- ]+/, '')
+    .replace(/^[_.\- ]+/, "")
     .toLowerCase()
     .replace(/[_.\- ]+(\w|$)/g, (m, p1) => p1.toUpperCase());
 }

@@ -7,15 +7,15 @@
 // import 'core-js/fn/object/define-property';
 // import 'core-js/fn/object/keys';
 
-import { Set } from 'qd-set';
+import { Set } from "qd-set";
 
 export { Set };
 
-export const COMPONENT_FEATURE_TESTS = new Set(['customevent']);
+export const COMPONENT_FEATURE_TESTS = new Set(["customevent"]);
 
 const aSymbol = Symbol || (x => `_${x}`);
-const sRoot = aSymbol('sroot');
-const sState = aSymbol('state');
+const sRoot = aSymbol("sroot");
+const sState = aSymbol("state");
 
 class Component {}
 
@@ -35,13 +35,19 @@ export const componentMixin = (C = Component) =>
       if (process.env.DEBUG) {
         const { componentName, sideEffects } = this.constructor;
         if (!componentName) {
-          console.warn('Component needs to have a name, e.g. `my-tag`. To set a name, provide a static getter called `componentName`.');
+          console.warn(
+            "Component needs to have a name, e.g. `my-tag`. To set a name, provide a static getter called `componentName`."
+          );
         }
         if (!defaults) {
-          console.warn('No default properties provided. Implement a static getter called `defaults`.');
+          console.warn(
+            "No default properties provided. Implement a static getter called `defaults`."
+          );
         }
         if (!sideEffects) {
-          console.warn('No side effects provided. Implement a static getter called `sideEffects`.');
+          console.warn(
+            "No side effects provided. Implement a static getter called `sideEffects`."
+          );
         }
       }
 
@@ -81,7 +87,7 @@ export const componentMixin = (C = Component) =>
     setupProperties() {
       const { sideEffects } = this.constructor;
 
-      Object.keys(this[sState]).forEach((key) => {
+      Object.keys(this[sState]).forEach(key => {
         const sideEffect = sideEffects[key];
         this.setupProperty(key, sideEffect);
       });
@@ -90,13 +96,13 @@ export const componentMixin = (C = Component) =>
     setupProperty(key, sideEffect) {
       Object.defineProperty(this, key, {
         get: () => this[sState][key],
-        set: (value) => {
+        set: value => {
           const oldValue = this[sState][key];
           this.setInternalState(key, value);
           if (sideEffect) sideEffect.call(this, value, oldValue);
         },
         enumerable: true,
-        configurable: true,
+        configurable: true
       });
     }
   };

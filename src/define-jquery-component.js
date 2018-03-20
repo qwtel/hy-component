@@ -11,12 +11,12 @@
 // import 'core-js/fn/object/keys';
 
 // jQuery is an optional dependency
-import $ from 'jquery'; // eslint-disable-line import/no-extraneous-dependencies
+import $ from "jquery"; // eslint-disable-line import/no-extraneous-dependencies
 
-import { Set } from 'qd-set';
+import { Set } from "qd-set";
 
-import { parseType } from './common';
-import { VanillaComponent } from './vanilla';
+import { parseType } from "./common";
+import { VanillaComponent } from "./vanilla";
 
 export { Set };
 
@@ -38,9 +38,9 @@ export function defineJQueryComponent(name, Component) {
   };
 
   function plugin(option, arg, ...args) {
-    const key = typeof option === 'string' ? option : null;
+    const key = typeof option === "string" ? option : null;
 
-    return this.each(function () {
+    return this.each(function() {
       const $this = $(this);
       const data = $this.data(ns);
 
@@ -48,31 +48,35 @@ export function defineJQueryComponent(name, Component) {
         const { defaults, types } = Component;
         const dataProps = $this.data();
 
-        Object.keys(defaults).forEach((dft) => {
+        Object.keys(defaults).forEach(dft => {
           if (dataProps[dft]) {
             const value = parseType(types[dft], dataProps[dft]);
             dataProps[dft] = value != null ? value : Component.defaults[dft];
           }
         });
-        const props = $.extend({}, dataProps, typeof option === 'object' && option);
+        const props = $.extend(
+          {},
+          dataProps,
+          typeof option === "object" && option
+        );
 
         $this.data(ns, new Constructor(this, props));
-      } else if (key && typeof data[key] === 'function') {
+      } else if (key && typeof data[key] === "function") {
         data[key](arg, ...args);
-      } else if (typeof option === 'object' && option) {
+      } else if (typeof option === "object" && option) {
         $.extend(data, option);
       }
     });
   }
 
-  const fName = ns.split('.').pop();
+  const fName = ns.split(".").pop();
 
   const old = $.fn[fName];
 
   $.fn[fName] = plugin;
   $.fn[fName].Constructor = Constructor;
 
-  $.fn[fName].noConflict = function () {
+  $.fn[fName].noConflict = function() {
     $.fn[fName] = old;
     return this;
   };

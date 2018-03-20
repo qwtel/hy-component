@@ -1,13 +1,13 @@
-import { Set } from 'qd-set';
+import { Set } from "qd-set";
 
-import { componentMixin, COMPONENT_FEATURE_TESTS } from './component';
+import { componentMixin, COMPONENT_FEATURE_TESTS } from "./component";
 import {
   customElementMixin,
   CustomElement,
   fragmentFromString,
-  CUSTOM_ELEMENT_FEATURE_TESTS,
-} from './custom-element';
-import { VanillaComponent, VANILLA_FEATURE_TESTS } from './vanilla';
+  CUSTOM_ELEMENT_FEATURE_TESTS
+} from "./custom-element";
+import { VanillaComponent, VANILLA_FEATURE_TESTS } from "./vanilla";
 
 export {
   COMPONENT_FEATURE_TESTS,
@@ -18,5 +18,5 @@ export {
   CustomElement,
   fragmentFromString,
   VanillaComponent,
-  Set,
+  Set
 };

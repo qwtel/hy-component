@@ -1,4 +1,4 @@
-import { array, arrayOf, bool, number, oneOf, regex, string } from 'attr-types';
+import { array, arrayOf, bool, number, oneOf, regex, string } from "attr-types";
 
 export { array, arrayOf, bool, number, oneOf, regex, string };
 export default {
@@ -8,5 +8,5 @@ export default {
   number,
   oneOf,
   regex,
-  string,
+  string
 };
