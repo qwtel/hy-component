@@ -30,7 +30,8 @@
     "qd-set": "^2.0.0"
   },
   "optionalDependencies": {
-    "jquery": "^3.3.1"
+    "jquery": "^3.3.1",
+    "rxjs": "^5.5.7"
   },
   "browserify": {
     "transform": [

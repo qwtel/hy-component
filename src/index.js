@@ -1,3 +1,7 @@
+// # src / index.js
+// Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
+// Licensed under MIT
+
 import { Set } from "qd-set";
 
 import { componentMixin, COMPONENT_FEATURE_TESTS } from "./component";
@@ -8,6 +12,7 @@ import {
   CUSTOM_ELEMENT_FEATURE_TESTS
 } from "./custom-element";
 import { VanillaComponent, VANILLA_FEATURE_TESTS } from "./vanilla";
+import { rxjsMixin } from "./rxjs";
 
 export {
   COMPONENT_FEATURE_TESTS,
@@ -18,5 +23,6 @@ export {
   CustomElement,
   fragmentFromString,
   VanillaComponent,
+  rxjsMixin,
   Set
 };
