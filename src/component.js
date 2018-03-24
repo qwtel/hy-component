@@ -17,6 +17,9 @@ const aSymbol = Symbol || (x => `_${x}`);
 const sRoot = aSymbol("sroot");
 const sState = aSymbol("state");
 
+window.process = window.process || {};
+window.process.env = window.process.env || {};
+
 class Component {}
 
 export const componentMixin = (C = Component) =>
