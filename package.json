@@ -1,6 +1,6 @@
 {
   "name": "hy-component",
-  "version": "1.0.0-pre.11",
+  "version": "1.0.0-pre.12",
   "description": "Tools for building web components that work across popular UI frameworks.",
   "main": "src/index.js",
   "scripts": {
@@ -48,10 +48,19 @@
   "babel": {
     "env": {
       "es5": {
-        "presets": ["env"]
+        "presets": [
+          "env"
+        ]
       },
       "esm": {
-        "presets": [["env", { "modules": false }]]
+        "presets": [
+          [
+            "env",
+            {
+              "modules": false
+            }
+          ]
+        ]
       }
     }
   },
