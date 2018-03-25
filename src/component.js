@@ -48,9 +48,7 @@ export const componentMixin = (C = Component) =>
           );
         }
         if (!sideEffects) {
-          console.warn(
-            "No side effects provided. Implement a static getter called `sideEffects`."
-          );
+          console.warn("No side effects provided. Implement a static getter called `sideEffects`.");
         }
       }
 

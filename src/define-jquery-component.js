@@ -54,11 +54,7 @@ export function defineJQueryComponent(name, Component) {
             dataProps[dft] = value != null ? value : Component.defaults[dft];
           }
         });
-        const props = $.extend(
-          {},
-          dataProps,
-          typeof option === "object" && option
-        );
+        const props = $.extend({}, dataProps, typeof option === "object" && option);
 
         $this.data(ns, new Constructor(this, props));
       } else if (key && typeof data[key] === "function") {

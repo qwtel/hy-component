@@ -72,9 +72,7 @@ export const customElementMixin = C =>
       const state = {};
       Object.keys(types).forEach(key => {
         const attrName = decamelize(key);
-        const attr = this.hasAttribute(attrName)
-          ? this.getAttribute(attrName)
-          : null;
+        const attr = this.hasAttribute(attrName) ? this.getAttribute(attrName) : null;
         const value = parseType(types[key], attr);
         if (value != null) state[key] = value;
       });
@@ -124,8 +122,7 @@ export const customElementMixin = C =>
           el.shadowRoot.appendChild(instance);
           return el.shadowRoot;
         }
-        if (process.env.DEBUG)
-          console.warn("Component doesnt define a template. Intentional?");
+        if (process.env.DEBUG) console.warn("Component doesnt define a template. Intentional?");
         throw Error("ShadowDOM API not supported");
       }
       return el;
@@ -146,8 +143,7 @@ export const customElementMixin = C =>
 
 // This is a drop-in replacement for `HTMLElement` which is compatible with babel.
 export function CustomElement() {
-  const HTMLElement =
-    typeof window.HTMLElement === "function" ? window.HTMLElement : () => {};
+  const HTMLElement = typeof window.HTMLElement === "function" ? window.HTMLElement : () => {};
   return Reflect.construct(HTMLElement, [], this.__proto__.constructor); // eslint-disable-line
 }
 
