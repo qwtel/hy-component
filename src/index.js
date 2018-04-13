@@ -9,7 +9,7 @@ import {
   customElementMixin,
   CustomElement,
   fragmentFromString,
-  CUSTOM_ELEMENT_FEATURE_TESTS
+  CUSTOM_ELEMENT_FEATURE_TESTS,
 } from "./custom-element";
 import { VanillaComponent, VANILLA_FEATURE_TESTS } from "./vanilla";
 import { rxjsMixin } from "./rxjs";
@@ -24,5 +24,5 @@ export {
   fragmentFromString,
   VanillaComponent,
   rxjsMixin,
-  Set
+  Set,
 };

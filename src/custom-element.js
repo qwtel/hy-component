@@ -21,7 +21,7 @@ export { Set };
 export const CUSTOM_ELEMENT_FEATURE_TESTS = new Set([
   ...COMPONENT_FEATURE_TESTS,
   "template",
-  "customelements"
+  "customelements",
 ]);
 
 let circutBreaker = null;
