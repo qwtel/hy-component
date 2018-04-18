@@ -7,17 +7,14 @@ import { ReplaySubject } from "rxjs/_esm5/ReplaySubject";
 
 export const rxjsMixin = C =>
   class extends C {
-    static get sideEffects() {}
-
     setupComponent(el, opts) {
-      this.subjects = {};
       const sideEffects = {};
 
+      this.subjects = {};
       this.subjects.disconnect = new Subject();
       this.subjects.document = new ReplaySubject();
 
-      const { types } = this.constructor;
-      Object.keys(types).map(key => {
+      Object.keys(this.constructor.types).map(key => {
         this.subjects[key] = new ReplaySubject(1);
         sideEffects[key] = x => this.subjects[key].next(x);
       });
@@ -26,7 +23,7 @@ export const rxjsMixin = C =>
         get: () => sideEffects,
         set: () => {},
         enumerable: true,
-        configurable: true
+        configurable: true,
       });
 
       super.setupComponent(el, opts);
@@ -34,12 +31,8 @@ export const rxjsMixin = C =>
 
     connectComponent() {
       super.connectComponent();
-      this.subjects.document.next(document); // TODO: should rename to document?
-
-      const { types } = this.constructor;
-      Object.keys(types).map(key => {
-        this.subjects[key].next(this[key]);
-      });
+      this.subjects.document.next(document);
+      Object.keys(this.constructor.types).map(key => this.subjects[key].next(this[key]));
     }
 
     disconnectComponent() {
