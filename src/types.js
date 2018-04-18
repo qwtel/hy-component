@@ -8,5 +8,5 @@ export default {
   number,
   oneOf,
   regex,
-  string
+  string,
 };

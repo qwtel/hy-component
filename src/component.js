@@ -106,7 +106,7 @@ export const componentMixin = (C = Component) =>
           if (sideEffect) sideEffect.call(this, value, oldValue);
         },
         enumerable: true,
-        configurable: true
+        configurable: true,
       });
     }
   };
