@@ -3,6 +3,7 @@
 // Licensed under MIT
 
 import { Subject } from "rxjs/_esm5/Subject";
+import { ReplaySubject } from "rxjs/_esm5/ReplaySubject";
 
 export const rxjsMixin = C =>
   class extends C {
@@ -13,11 +14,11 @@ export const rxjsMixin = C =>
       const sideEffects = {};
 
       this.subjects.disconnect = new Subject();
-      this.subjects.adapt = new Subject();
+      this.subjects.document = new ReplaySubject();
 
       const { types } = this.constructor;
       Object.keys(types).map(key => {
-        this.subjects[key] = new Subject();
+        this.subjects[key] = new ReplaySubject(1);
         sideEffects[key] = x => this.subjects[key].next(x);
       });
 
@@ -33,8 +34,7 @@ export const rxjsMixin = C =>
 
     connectComponent() {
       super.connectComponent();
-
-      this.subjects.adapt.next(document); // TODO: should rename to document?
+      this.subjects.document.next(document); // TODO: should rename to document?
 
       const { types } = this.constructor;
       Object.keys(types).map(key => {
@@ -43,12 +43,12 @@ export const rxjsMixin = C =>
     }
 
     disconnectComponent() {
-      this.subjects.disconnect.next({});
       super.disconnectComponent();
+      this.subjects.disconnect.next({});
     }
 
     adaptComponent() {
-      this.subjects.adapt.next(document);
       super.adaptComponent();
+      this.subjects.document.next(document);
     }
   };
