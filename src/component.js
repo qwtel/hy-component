@@ -20,6 +20,9 @@ const sState = aSymbol("state");
 window.process = window.process || {};
 window.process.env = window.process.env || {};
 
+window.requestIdleCallback = window.requestIdleCallback || (f => window.setTimeout(f, 0));
+window.cancelIdleCallback = window.cancelIdleCallback || window.clearTimeout;
+
 class Component {}
 
 export const componentMixin = (C = Component) =>
