@@ -13,9 +13,9 @@ export { Set };
 
 export const COMPONENT_FEATURE_TESTS = new Set(["customevent"]);
 
-const aSymbol = Symbol || (x => `_${x}`);
-const sRoot = aSymbol("sroot");
-const sState = aSymbol("state");
+const sSymbol = Symbol || (x => `_${x}`);
+const sRoot = sSymbol("sroot");
+const sState = sSymbol("state");
 
 window.process = window.process || {};
 window.process.env = window.process.env || {};
