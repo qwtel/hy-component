@@ -2,8 +2,7 @@
 // Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
 // Licensed under MIT
 
-import { Subject } from "rxjs/_esm5/Subject";
-import { ReplaySubject } from "rxjs/_esm5/ReplaySubject";
+import { Subject, ReplaySubject } from "rxjs/_esm5";
 
 export const rxjsMixin = C =>
   class extends C {

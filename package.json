@@ -31,7 +31,7 @@
   },
   "optionalDependencies": {
     "jquery": "^3.3.1",
-    "rxjs": "^5.5.7"
+    "rxjs": "^6.2.1"
   },
   "prettier": {
     "printWidth": 100,
