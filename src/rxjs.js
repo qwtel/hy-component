@@ -2,7 +2,7 @@
 // Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
 // Licensed under MIT
 
-import { Subject, ReplaySubject } from "rxjs/_esm5";
+import { Observable, Subject, ReplaySubject } from "rxjs/_esm5";
 
 export const rxjsMixin = C =>
   class extends C {
@@ -44,3 +44,15 @@ export const rxjsMixin = C =>
       this.subjects.document.next(document);
     }
   };
+
+export const createXObservable = X => (el, cOpts, oOpts) =>
+  Observable.create(obs => {
+    const next = obs.next.bind(obs);
+    const observer = new X(xs => Array.from(xs).forEach(next), cOpts);
+    /* if (process.env.DEBUG) console.log("observe", X.name); */
+    observer.observe(el, oOpts);
+    return () => {
+      /* if (process.env.DEBUG) console.log("unobserve", X.name); */
+      observer.unobserve(el);
+    };
+  });
