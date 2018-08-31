@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "clean": "rm -rf es5 esm",
-    "test": "eslint src",
+    "test": "exit 0",
     "format": "prettier --write \"src/**/*.js\"",
     "build": "npm run build:es5 & npm run build:esm & wait",
     "build:es5": "NODE_ENV=es5 babel src --out-dir es5",
@@ -16,18 +16,14 @@
   "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.7.0",
-    "babelify": "^8.0.0",
-    "envify": "^4.1.0",
-    "eslint": "^4.19.1",
-    "eslint-config-prettier": "^2.9.0",
-    "prettier": "^1.12.1"
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "prettier": "^1.14.2"
   },
   "dependencies": {
-    "attr-types": "^1.0.1",
-    "qd-set": "^2.0.0"
+    "attr-types": "^1.0.2",
+    "qd-set": "^2.0.1"
   },
   "optionalDependencies": {
     "jquery": "^3.3.1",
@@ -37,26 +33,17 @@
     "printWidth": 100,
     "trailingComma": "es5"
   },
-  "eslintConfig": {
-    "env": {
-      "browser": true
-    },
-    "extends": "prettier",
-    "parserOptions": {
-      "sourceType": "module"
-    }
-  },
   "babel": {
     "env": {
       "es5": {
         "presets": [
-          "env"
+          "@babel/preset-env"
         ]
       },
       "esm": {
         "presets": [
           [
-            "env",
+            "@babel/preset-env",
             {
               "modules": false
             }
@@ -71,7 +58,7 @@
         "babelify",
         {
           "presets": [
-            "env"
+            "@babel/preset-env"
           ]
         }
       ],
