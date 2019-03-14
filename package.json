@@ -1,6 +1,6 @@
 {
   "name": "hy-component",
-  "version": "1.0.0-pre.26",
+  "version": "1.0.0-pre.27",
   "description": "Tools for building web components that work across popular UI frameworks.",
   "main": "src/index.js",
   "scripts": {
